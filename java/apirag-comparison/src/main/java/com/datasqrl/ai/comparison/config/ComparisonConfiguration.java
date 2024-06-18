@@ -123,18 +123,15 @@ public class ComparisonConfiguration {
   public static ComparisonConfiguration fromFile(Path modelConfigPath, Path useCasePath, Path toolsPath) {
     ErrorHandling.checkArgument(Files.isRegularFile(modelConfigPath), "Cannot access configuration file: %s", modelConfigPath);
     ErrorHandling.checkArgument(Files.isRegularFile(toolsPath), "Cannot access tools file: %s", toolsPath);
-    ErrorHandling.checkArgument(Files.isRegularFile(useCasePath), "Cannot access tools file: %s", toolsPath);
-    JSONConfiguration baseConfig = JsonUtil.getConfiguration(modelConfigPath);
+    ErrorHandling.checkArgument(Files.isRegularFile(useCasePath), "Cannot access use case file: %s", useCasePath);
+    JSONConfiguration baseConfig = JsonUtil.getConfiguration(useCasePath);
+    JSONConfiguration modelConfig = JsonUtil.getConfiguration(modelConfigPath);
     String tools;
     try {
       tools = Files.readString(toolsPath);
     } catch (IOException e) {
       throw new IllegalArgumentException("Could not read tools file: %s" + toolsPath, e);
     }
-    return new ComparisonConfiguration(baseConfig, baseConfig.subset("model"), tools);
-  }
-
-  public String getScript() {
-    return null;
+    return new ComparisonConfiguration(baseConfig, modelConfig, tools);
   }
 }
