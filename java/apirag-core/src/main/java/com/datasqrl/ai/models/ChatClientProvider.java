@@ -3,6 +3,7 @@ package com.datasqrl.ai.models;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.GenericChatMessage;
 import com.datasqrl.ai.backend.ModelBindings;
+import com.datasqrl.ai.backend.ModelObservability;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,6 +19,8 @@ public abstract class ChatClientProvider<Message, FunctionCall> {
   protected final FunctionBackend backend;
   @Getter
   protected final ModelBindings<Message, FunctionCall> bindings;
+  @Getter
+  protected final ModelObservability observability;
 
   public abstract GenericChatMessage chat(String message, Map<String, Object> context);
 

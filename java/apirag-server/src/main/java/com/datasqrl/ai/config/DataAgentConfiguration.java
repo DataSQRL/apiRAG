@@ -6,6 +6,8 @@ import com.datasqrl.ai.api.GraphQLExecutor;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.FunctionDefinition;
 import com.datasqrl.ai.backend.FunctionType;
+import com.datasqrl.ai.backend.MicrometerModelObservability;
+import com.datasqrl.ai.backend.ModelObservability;
 import com.datasqrl.ai.backend.RuntimeFunctionDefinition;
 import com.datasqrl.ai.models.ChatClientProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
@@ -13,6 +15,7 @@ import com.datasqrl.ai.util.ConfigurationUtil;
 import com.datasqrl.ai.util.ErrorHandling;
 import com.datasqrl.ai.util.JsonUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -44,6 +47,7 @@ public class DataAgentConfiguration {
   Configuration baseConfiguration;
   Configuration modelConfiguration;
   String toolsDefinition;
+  MeterRegistry meterRegistry;
 
   public FunctionBackend getFunctionBackend() {
     String graphQLEndpoint = baseConfiguration.getString(API_URL_KEY);
@@ -88,10 +92,18 @@ public class DataAgentConfiguration {
     return prompt;
   }
 
+  private ModelObservability getObservability() {
+    if (meterRegistry!=null && !meterRegistry.isClosed()) {
+      return new MicrometerModelObservability(meterRegistry, "chitterchat");
+    } else {
+      return ModelObservability.NOOP;
+    }
+  }
+
   public ChatClientProvider getChatProvider() {
     FunctionBackend backend = getFunctionBackend();
     String systemPrompt = getSystemPrompt();
-    return getChatProviderFactory().create(getModelConfiguration(), backend, systemPrompt);
+    return getChatProviderFactory().create(getModelConfiguration(), backend, systemPrompt, getObservability());
   }
 
   public ChatProviderFactory getChatProviderFactory() {
@@ -119,7 +131,7 @@ public class DataAgentConfiguration {
     return baseConfiguration.containsKey(AUTH_FIELD_KEY);
   }
 
-  public static DataAgentConfiguration fromFile(Path configPath, Path toolsPath) {
+  public static DataAgentConfiguration fromFile(Path configPath, Path toolsPath, MeterRegistry meterRegistry) {
     ErrorHandling.checkArgument(Files.isRegularFile(configPath), "Cannot access configuration file: %s", configPath);
     ErrorHandling.checkArgument(Files.isRegularFile(toolsPath), "Cannot access tools file: %s", toolsPath);
     JSONConfiguration baseConfig = JsonUtil.getConfiguration(configPath);
@@ -129,7 +141,7 @@ public class DataAgentConfiguration {
     } catch (IOException e) {
       throw new IllegalArgumentException("Could not read tools file: %s" + toolsPath, e);
     }
-    return new DataAgentConfiguration(baseConfig, baseConfig.subset("model"), tools);
+    return new DataAgentConfiguration(baseConfig, baseConfig.subset("model"), tools, meterRegistry);
   }
 
 }

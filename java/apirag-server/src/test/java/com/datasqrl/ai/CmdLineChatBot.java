@@ -133,7 +133,7 @@ public class CmdLineChatBot {
 
   public static void main(String... args) throws Exception {
     if (args==null || args.length!=2) throw new IllegalArgumentException("Please provide a configuration file and a tools file");
-    DataAgentConfiguration configuration = DataAgentConfiguration.fromFile(Path.of(args[0]), Path.of(args[1]));
+    DataAgentConfiguration configuration = DataAgentConfiguration.fromFile(Path.of(args[0]), Path.of(args[1]), null);
 
 
     Map<String,Object> context = Map.of();

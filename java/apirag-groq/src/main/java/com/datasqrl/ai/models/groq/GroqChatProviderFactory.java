@@ -1,6 +1,7 @@
 package com.datasqrl.ai.models.groq;
 
 import com.datasqrl.ai.backend.FunctionBackend;
+import com.datasqrl.ai.backend.ModelObservability;
 import com.datasqrl.ai.models.AbstractChatProviderFactory;
 import com.datasqrl.ai.models.ChatClientProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
@@ -18,7 +19,7 @@ public class GroqChatProviderFactory extends AbstractChatProviderFactory {
   }
 
   @Override
-  public ChatClientProvider<?, ?> create(Configuration modelConfiguration, FunctionBackend backend, String prompt) {
-    return new GroqChatProvider(getModel(modelConfiguration, GroqChatModel.class), backend, prompt);
+  public ChatClientProvider<?, ?> create(Configuration modelConfiguration, FunctionBackend backend, String prompt, ModelObservability observability) {
+    return new GroqChatProvider(getModel(modelConfiguration, GroqChatModel.class), backend, prompt, observability);
   }
 }

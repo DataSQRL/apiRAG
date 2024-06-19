@@ -4,6 +4,7 @@ import com.datasqrl.ai.backend.ChatSession;
 import com.datasqrl.ai.backend.ContextWindow;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.GenericChatMessage;
+import com.datasqrl.ai.backend.ModelObservability;
 import com.datasqrl.ai.backend.RuntimeFunctionDefinition;
 import com.datasqrl.ai.models.ChatClientProvider;
 import com.datasqrl.ai.models.ChatMessageEncoder;
@@ -43,8 +44,8 @@ public class BedrockChatProvider extends ChatClientProvider<BedrockChatMessage, 
       + "}\n"
       + "Here are the functions you can use:";
 
-  public BedrockChatProvider(BedrockChatModel model, FunctionBackend backend, String systemPrompt) {
-    super(backend, new BedrockModelBindings(model));
+  public BedrockChatProvider(BedrockChatModel model, FunctionBackend backend, String systemPrompt, ModelObservability observability) {
+    super(backend, new BedrockModelBindings(model), observability);
     this.model = model;
     this.systemPrompt = combineSystemPromptAndFunctions(systemPrompt);
     EnvironmentVariableCredentialsProvider credentialsProvider = EnvironmentVariableCredentialsProvider.create();

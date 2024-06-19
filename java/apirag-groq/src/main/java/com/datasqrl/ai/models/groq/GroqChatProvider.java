@@ -4,6 +4,7 @@ import com.datasqrl.ai.backend.ChatSession;
 import com.datasqrl.ai.backend.ContextWindow;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.GenericChatMessage;
+import com.datasqrl.ai.backend.ModelObservability;
 import com.datasqrl.ai.models.ChatClientProvider;
 import com.datasqrl.ai.util.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,8 +52,8 @@ public class GroqChatProvider extends ChatClientProvider<ChatMessage, ChatFuncti
   private ChatFunctionCall errorFunctionCall = null;
   public static final String GROQ_URL = "https://api.groq.com/openai/v1/";
 
-  public GroqChatProvider(GroqChatModel model, FunctionBackend backend, String systemPrompt) {
-    super(backend, new GroqModelBindings(model));
+  public GroqChatProvider(GroqChatModel model, FunctionBackend backend, String systemPrompt, ModelObservability observability) {
+    super(backend, new GroqModelBindings(model), observability);
     this.model = model;
     this.systemPrompt = systemPrompt;
     String groqApiKey = System.getenv("GROQ_API_KEY");

@@ -2,12 +2,14 @@ package com.datasqrl.ai.spring;
 
 import com.datasqrl.ai.config.DataAgentConfiguration;
 import com.datasqrl.ai.models.ChatClientProvider;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -36,10 +38,14 @@ public class DataAgentServer {
 
     private final ChatClientProvider<?, ?> chatClientProvider;
     private final Function<String,Map<String,Object>> getContextFunction;
+    private final MeterRegistry meterRegistry;
 
+    @Autowired
     @SneakyThrows
-    public MessageController(DataAgentServerProperties props) {
-      DataAgentConfiguration configuration = DataAgentConfiguration.fromFile(Path.of(props.getConfig()), Path.of(props.getTools()));
+    public MessageController(DataAgentServerProperties props, MeterRegistry meterRegistry) {
+      this.meterRegistry = meterRegistry;
+      DataAgentConfiguration configuration = DataAgentConfiguration.fromFile(
+          Path.of(props.getConfig()), Path.of(props.getTools()), meterRegistry);
       this.getContextFunction = configuration.getContextFunction();
       this.chatClientProvider = configuration.getChatProvider();
     }

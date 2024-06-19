@@ -6,6 +6,7 @@ import com.datasqrl.ai.api.GraphQLExecutor;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.FunctionDefinition;
 import com.datasqrl.ai.backend.FunctionType;
+import com.datasqrl.ai.backend.ModelObservability;
 import com.datasqrl.ai.backend.RuntimeFunctionDefinition;
 import com.datasqrl.ai.models.ChatClientProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
@@ -92,7 +93,7 @@ public class ComparisonConfiguration {
   public ChatClientProvider getChatProvider() {
     FunctionBackend backend = getFunctionBackend();
     String systemPrompt = getSystemPrompt();
-    return getChatProviderFactory().create(getModelConfiguration(), backend, systemPrompt);
+    return getChatProviderFactory().create(getModelConfiguration(), backend, systemPrompt, ModelObservability.NOOP);
   }
 
   public ChatProviderFactory getChatProviderFactory() {

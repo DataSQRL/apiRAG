@@ -4,6 +4,8 @@ import com.datasqrl.ai.backend.ChatSession;
 import com.datasqrl.ai.backend.ContextWindow;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.GenericChatMessage;
+import com.datasqrl.ai.backend.ModelObservability;
+import com.datasqrl.ai.backend.ModelObservability.Trace;
 import com.datasqrl.ai.models.ChatClientProvider;
 import com.datasqrl.ai.util.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,8 +29,9 @@ public class OpenAiChatProvider extends ChatClientProvider<ChatMessage, ChatFunc
   private final OpenAiService service;
   private final String systemPrompt;
 
-  public OpenAiChatProvider(OpenAiChatModel model, FunctionBackend backend, String systemPrompt) {
-    super(backend, new OpenAIModelBindings(model));
+  public OpenAiChatProvider(OpenAiChatModel model, FunctionBackend backend, String systemPrompt,
+      ModelObservability observability) {
+    super(backend, new OpenAIModelBindings(model), observability);
     this.model = model;
     this.systemPrompt = systemPrompt;
     String openAIToken = System.getenv("OPENAI_API_KEY");
@@ -44,7 +47,7 @@ public class OpenAiChatProvider extends ChatClientProvider<ChatMessage, ChatFunc
     while (true) {
       log.info("Calling OpenAI with model {}", model.getModelName());
       ContextWindow<ChatMessage> contextWindow = session.getContextWindow();
-      log.debug("Calling GROQ with messages: {}", contextWindow.getMessages());
+      log.debug("Calling OpenAI with messages: {}", contextWindow.getMessages());
       ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest
           .builder()
           .model(model.getModelName())
@@ -56,7 +59,9 @@ public class OpenAiChatProvider extends ChatClientProvider<ChatMessage, ChatFunc
           .maxTokens(model.getCompletionLength())
           .logitBias(new HashMap<>())
           .build();
+      Trace modeltrace = observability.start();
       AssistantMessage responseMessage = service.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
+      modeltrace.stop(contextWindow.getNumTokens(), 0); //TODO: count output tokens
       log.info("Response:\n{}", responseMessage);
       String res = responseMessage.getTextContent();
       // Workaround for openai4j who doesn't recognize some function calls
