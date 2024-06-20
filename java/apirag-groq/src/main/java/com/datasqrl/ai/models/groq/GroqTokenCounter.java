@@ -19,7 +19,8 @@ public class GroqTokenCounter implements ModelAnalyzer<ChatMessage> {
     return numTokens + numTokens / 10; //Add a 10% buffer
   }
 
-  private int countTokens(String message) {
+  @Override
+  public int countTokens(String message) {
     if (message == null) {
       return 0;
     }

@@ -27,6 +27,7 @@ public class ComparisonRunner {
     this.modelFiles = modelFiles;
     this.useCaseFolders = useCaseFolders;
     this.scriptFile = scriptFile;
+    log.info("modelFiles: {}\n useCaseFolders: {}\n scriptFile: {}", modelFiles, useCaseFolders, scriptFile);
   }
 
   public void start() throws IOException {
@@ -78,18 +79,16 @@ public class ComparisonRunner {
     try (Stream<Path> stream = Files.list(Paths.get(args[0]))) {
       modelFiles = stream
           .filter(file -> !Files.isDirectory(file))
-          .map(Path::getFileName)
+          .filter(file -> file.getFileName().toString().endsWith(".json"))
           .map(Path::toString)
           .toList();
     }
     try (Stream<Path> stream = Files.list(Paths.get(args[1]))) {
       useCaseFolders = stream
           .filter(Files::isDirectory)
-          .map(Path::getFileName)
           .map(Path::toString)
           .toList();
     }
-
 
     ComparisonRunner runner = new ComparisonRunner(modelFiles, useCaseFolders, scriptFile);
     runner.start();

@@ -14,12 +14,14 @@ public class OpenAITokenCounter implements ModelAnalyzer<ChatMessage> {
 
   Encoding encoding;
 
+  @Override
   public int countTokens(ChatMessage message) {
     int numTokens = countTokens(message.getTextContent());
     return numTokens + numTokens / 10; //Add a 10% buffer
   }
 
-  private int countTokens(String message) {
+  @Override
+  public int countTokens(String message) {
     return encoding.countTokens(message);
   }
 

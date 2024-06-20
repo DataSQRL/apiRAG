@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -40,14 +41,14 @@ public class AgentRunner {
   public void run() {
     AtomicInteger idCounter = new AtomicInteger(1);
     String fileName = modelName + "-Id" + idCounter.get() + "-" + getCurrentTime() + ".json";
-    writeToFile("{\n \"log\" : \n[\n", fileName);
+    writeToFile("[\n", fileName);
     testSessions.forEach(session -> {
       log.info("Running session with userId: {}", idCounter.get());
       Map<String, Object> context = contextFunction.apply(Integer.toString(idCounter.getAndIncrement()));
       SessionLog sessionLog = runChatSession(session, context);
       writeToFile(sessionLog, fileName);
     });
-    writeToFile("\n]\n}", fileName);
+    writeToFile("\n]", fileName);
   }
 
   private void writeToFile(String s, String fileName) {
@@ -76,23 +77,21 @@ public class AgentRunner {
   }
 
   private SessionLog runChatSession(TestChatSession session, Map<String, Object> context) {
-    SessionLog sessionLog = new SessionLog(List.of());
+    List<SessionLog.LogEntry> sessions = new ArrayList<>();
     session.queries().forEach(query -> {
       log.info("Query: {}", query.query());
       GenericChatMessage response = chatProvider.chat(query.query(), context);
       log.info("Response: {}", response.getContent());
-      sessionLog.entries().add(logInteraction(query, response));
+      sessions.add(logInteraction(query, response));
     });
-    return sessionLog;
+    SessionLog logs = new SessionLog(sessions);
+    log.info("SessionLog: {}", logs);
+    return logs;
   }
 
   private SessionLog.LogEntry logInteraction(TestChatSession.ChatQuery query, GenericChatMessage response) {
     TestChatSession.ChatQuery.AnswerType answerType =
         response.getFunctionCall() == null ? TestChatSession.ChatQuery.AnswerType.TEXT : TestChatSession.ChatQuery.AnswerType.FUNCTION_CALL;
     return new SessionLog.LogEntry(query.query(), query.expectedAnswer(), response.getContent(), query.expectedAnswerType(), answerType);
-  }
-
-  private void evaluateAnswer(String query, GenericChatMessage answer) {
-
   }
 }
