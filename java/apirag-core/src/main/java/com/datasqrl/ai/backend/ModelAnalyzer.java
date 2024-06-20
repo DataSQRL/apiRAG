@@ -5,4 +5,5 @@ public interface ModelAnalyzer<ChatMessage> {
 
   int countTokens(ChatMessage message);
 
+  int countTokens(String generation);
 }

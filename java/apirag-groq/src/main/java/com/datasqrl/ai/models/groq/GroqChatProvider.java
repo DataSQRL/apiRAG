@@ -96,18 +96,23 @@ public class GroqChatProvider extends ChatClientProvider<ChatMessage, ChatFuncti
           .logitBias(new HashMap<>())
           .build();
       AssistantMessage responseMessage;
+      ModelObservability.Trace modeltrace = observability.start();
       try {
         responseMessage = service.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
+        modeltrace.stop();
+        modeltrace.complete(contextWindow.getNumTokens(), bindings.getTokenCounter().countTokens(responseMessage));
       } catch (OpenAiHttpException e) {
+        modeltrace.stop();
         // Workaround for groq API bug that throws 400 on some function calls
         if (e.statusCode == 400 && errorFunctionCall != null) {
           responseMessage = new AssistantMessage("", "", null, errorFunctionCall);
+          modeltrace.complete(contextWindow.getNumTokens(), bindings.getTokenCounter().countTokens(responseMessage));
           errorFunctionCall = null;
         } else {
           throw e;
         }
       }
-      log.info("Response:\n{}", responseMessage);
+      log.debug("Response:\n{}", responseMessage);
       String res = responseMessage.getTextContent();
       // Workaround for openai4j who doesn't recognize some function calls
       if (res != null) {

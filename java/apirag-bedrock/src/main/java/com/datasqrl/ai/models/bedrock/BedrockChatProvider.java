@@ -4,6 +4,7 @@ import com.datasqrl.ai.backend.ChatSession;
 import com.datasqrl.ai.backend.ContextWindow;
 import com.datasqrl.ai.backend.FunctionBackend;
 import com.datasqrl.ai.backend.GenericChatMessage;
+import com.datasqrl.ai.backend.ModelAnalyzer;
 import com.datasqrl.ai.backend.ModelObservability;
 import com.datasqrl.ai.backend.RuntimeFunctionDefinition;
 import com.datasqrl.ai.models.ChatClientProvider;
@@ -60,19 +61,23 @@ public class BedrockChatProvider extends ChatClientProvider<BedrockChatMessage, 
 
   @Override
   public GenericChatMessage chat(String message, Map<String, Object> context) {
+    ModelAnalyzer<BedrockChatMessage> tokenCounter = bindings.getTokenCounter();
     ChatSession<BedrockChatMessage, BedrockFunctionCall> session = new ChatSession<>(backend, context, systemPrompt, bindings);
     BedrockChatMessage chatMessage = new BedrockChatMessage(BedrockChatRole.USER, message, "");
     session.addMessage(chatMessage);
 
     int retryCount = 0;
     while (true) {
+      ModelObservability.Trace modeltrace = null;
       ContextWindow<BedrockChatMessage> contextWindow = session.getContextWindow();
       String prompt = contextWindow.getMessages().stream()
           .map(this.encoder::encodeMessage)
           .collect(Collectors.joining("\n"));
       log.info("Calling Bedrock with model {}", model.getModelName());
-      JSONObject responseAsJson = promptBedrock(client, model.getModelName(), prompt, model.getCompletionLength());
-      BedrockChatMessage responseMessage = encoder.decodeMessage(responseAsJson.get("generation").toString(), BedrockChatRole.ASSISTANT.getRole());
+      JSONObject responseAsJson = promptBedrock(client, model.getModelName(), prompt, model.getCompletionLength(), modeltrace);
+      String generatedResponse = responseAsJson.get("generation").toString();
+      BedrockChatMessage responseMessage = encoder.decodeMessage(generatedResponse, BedrockChatRole.ASSISTANT.getRole());
+      modeltrace.complete(tokenCounter.countTokens(prompt), tokenCounter.countTokens(generatedResponse));
       GenericChatMessage genericResponse = session.addMessage(responseMessage);
       BedrockFunctionCall functionCall = responseMessage.getFunctionCall();
       if (functionCall != null) {
@@ -120,7 +125,7 @@ public class BedrockChatProvider extends ChatClientProvider<BedrockChatMessage, 
     return systemPrompt + "\n" + functionText + "\n";
   }
 
-  private JSONObject promptBedrock(BedrockRuntimeClient client, String modelId, String prompt, int maxTokens) {
+  private JSONObject promptBedrock(BedrockRuntimeClient client, String modelId, String prompt, int maxTokens, ModelObservability.Trace modeltrace) {
     JSONObject request = new JSONObject()
         .put("prompt", prompt)
         .put("max_gen_len", maxTokens)
@@ -130,9 +135,11 @@ public class BedrockChatProvider extends ChatClientProvider<BedrockChatMessage, 
         .body(SdkBytes.fromUtf8String(request.toString()))
         .build();
     log.debug("Bedrock prompt: {}", prompt);
+    modeltrace = observability.start();
     InvokeModelResponse invokeModelResponse = client.invokeModel(invokeModelRequest);
+    modeltrace.stop();
     JSONObject jsonObject = new JSONObject(invokeModelResponse.body().asUtf8String());
-    log.info("🤖Bedrock Response: {}", jsonObject);
+    log.debug("🤖Bedrock Response: {}", jsonObject);
     return jsonObject;
   }
 }

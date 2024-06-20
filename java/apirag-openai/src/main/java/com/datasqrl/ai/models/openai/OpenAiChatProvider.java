@@ -61,8 +61,9 @@ public class OpenAiChatProvider extends ChatClientProvider<ChatMessage, ChatFunc
           .build();
       Trace modeltrace = observability.start();
       AssistantMessage responseMessage = service.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
-      modeltrace.stop(contextWindow.getNumTokens(), 0); //TODO: count output tokens
-      log.info("Response:\n{}", responseMessage);
+      modeltrace.stop();
+      modeltrace.complete(contextWindow.getNumTokens(), bindings.getTokenCounter().countTokens(responseMessage));
+      log.debug("Response:\n{}", responseMessage);
       String res = responseMessage.getTextContent();
       // Workaround for openai4j who doesn't recognize some function calls
       if (res != null) {
