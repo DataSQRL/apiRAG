@@ -25,8 +25,10 @@ public class ModelObservabilityTest {
       Trace trace = modelObservability.start();
       // Simulate some work
       Thread.sleep(100);
-      // Stop the trace with some token counts
-      trace.stop(10*i, 20*i);
+      // Stop the trace
+      trace.stop();
+      // Complete the trace with some token counts
+      trace.complete(10*i, 20*i);
     }
 
     // Check the metrics

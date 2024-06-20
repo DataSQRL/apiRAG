@@ -43,8 +43,12 @@ public class MicrometerModelObservability implements ModelObservability {
     Stopwatch timer = Stopwatch.createStarted();
 
     @Override
-    public void stop(int numInputTokens, int numOutputTokens) {
+    public void stop() {
       timer.stop();
+    }
+
+    @Override
+    public void complete(int numInputTokens, int numOutputTokens) {
       latencyTimer.record(timer.elapsed());
       inputTokenCounter.record(numInputTokens);
       outputTokenCounter.record(numOutputTokens);

@@ -8,7 +8,9 @@ public interface ModelObservability {
 
   public interface Trace {
 
-    void stop(int numInputTokens, int numOutputTokens);
+    void stop();
+
+    void complete(int numInputTokens, int numOutputTokens);
 
   }
 
@@ -17,7 +19,12 @@ public interface ModelObservability {
     public Trace start() {
       return new Trace() {
         @Override
-        public void stop(int numInputTokens, int numOutputTokens) {
+        public void stop() {
+
+        }
+
+        @Override
+        public void complete(int numInputTokens, int numOutputTokens) {
 
         }
       };
