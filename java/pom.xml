@@ -10,10 +10,14 @@
   <packaging>pom</packaging>
   <modules>
     <module>apirag-core</module>
+    <module>apirag-udf</module>
     <module>apirag-openai</module>
     <module>apirag-groq</module>
     <module>apirag-bedrock</module>
+    <module>apirag-graphql</module>
+    <module>apirag-rest</module>
     <module>apirag-server</module>
+
   </modules>
 
   <properties>
@@ -28,6 +32,8 @@
     <commons-config.version>2.10.1</commons-config.version>
     <commons-beanutil.version>1.9.4</commons-beanutil.version>
     <slf4j.version>2.0.13</slf4j.version>
+    <graphql-java.version>22.1</graphql-java.version>
+    <reflections.version>0.10.2</reflections.version>
   </properties>
 
   <dependencies>

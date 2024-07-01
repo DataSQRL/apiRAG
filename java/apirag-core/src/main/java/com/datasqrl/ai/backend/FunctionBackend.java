@@ -1,19 +1,21 @@
 package com.datasqrl.ai.backend;
 
 import com.datasqrl.ai.api.APIExecutor;
+import com.datasqrl.ai.api.APIQuery;
+import com.datasqrl.ai.util.ErrorHandling;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.networknt.schema.JsonSchema;
 import com.networknt.schema.JsonSchemaFactory;
-import com.networknt.schema.PathType;
-import com.networknt.schema.SchemaValidatorsConfig;
 import com.networknt.schema.SpecVersion;
 import com.networknt.schema.ValidationMessage;
+import java.util.HashMap;
+import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -37,49 +38,52 @@ import java.util.stream.Collectors;
  *
  */
 @Slf4j
-@Value
 public class FunctionBackend {
 
-  public static final String SAVE_CHAT_FUNCTION_NAME = "_saveChatMessage";
-  public static final String RETRIEVE_CHAT_FUNCTION_NAME = "_getChatMessages";
+  @Getter
+  private final Map<String, RuntimeFunctionDefinition> functions = new HashMap<>();
 
-  private static Set<String> RESERVED_FUNCTION_NAMES = Set.of(SAVE_CHAT_FUNCTION_NAME.toLowerCase(),
-      RETRIEVE_CHAT_FUNCTION_NAME.toLowerCase());
+  Optional<RuntimeFunctionDefinition> saveChatFct = Optional.empty();
 
-  Map<String, RuntimeFunctionDefinition> functions;
+  Optional<RuntimeFunctionDefinition> getChatsFct = Optional.empty();
 
-  Optional<RuntimeFunctionDefinition> saveChatFct;
-
-  Optional<RuntimeFunctionDefinition> getChatsFct;
-
-  APIExecutor apiExecutor;
+  Map<String,APIExecutor> apiExecutors;
 
   ObjectMapper mapper;
 
+  public FunctionBackend(Map<String,APIExecutor> apiExecutors, ObjectMapper mapper) {
+    this.apiExecutors = apiExecutors;
+    this.mapper = mapper;
+  }
 
-  /**
-   * Constructs a {@link FunctionBackend} from the provided configuration file, {@link APIExecutor},
-   * and {@link ModelAnalyzer}.
-   *
-   * The format of the configuration file is defined in the <a href="https://github.com/DataSQRL/apiRAG">Github repository</a>
-   * and you can find examples underneath the {@code api-examples} directory.
-   *
-   * @param tools Json string that defines the tools
-   * @param apiExecutor Executor for the API queries
-   * @return An {@link FunctionBackend} instance
-   * @throws IOException if configuration file cannot be read
-   */
-  public static FunctionBackend of(@NonNull String tools, @NonNull APIExecutor apiExecutor) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    List<RuntimeFunctionDefinition> functions = mapper.readValue(tools,
-        new TypeReference<>() {
-        });
-    return new FunctionBackend(functions.stream()
-        .filter(f -> !RESERVED_FUNCTION_NAMES.contains(f.getName().toLowerCase()))
-        .collect(Collectors.toMap(RuntimeFunctionDefinition::getName, Function.identity())),
-        functions.stream().filter(f -> f.getName().equalsIgnoreCase(SAVE_CHAT_FUNCTION_NAME)).findFirst(),
-        functions.stream().filter(f -> f.getName().equalsIgnoreCase(RETRIEVE_CHAT_FUNCTION_NAME)).findFirst(),
-        apiExecutor, mapper);
+  private void validateFunction(RuntimeFunctionDefinition function) {
+    //Validate functions
+    if (function.getType()==FunctionType.api) {
+      APIQuery query = function.getApi();
+      ErrorHandling.checkArgument(apiExecutors.containsKey(query.getNameOrDefault()),
+          "Function `%s` references API with name [%s] but no such API has been configured",
+          function.getName(), query.getNameOrDefault());
+      APIExecutor executor = apiExecutors.get(query.getNameOrDefault());
+      try {
+        executor.validate(query);
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException(
+            "Function [" + function.getName() + "] invalid for API [" + query.getNameOrDefault()
+                + "]", e);
+      }
+    } else if (function.getType()==FunctionType.local) {
+      ErrorHandling.checkArgument(function.getExecutable()!=null, "Local function [%s] has no executable", function.getName());
+    }
+  }
+
+  public void setSaveChatFct(RuntimeFunctionDefinition saveChatFct) {
+    validateFunction(saveChatFct);
+    this.saveChatFct = Optional.of(saveChatFct);
+  }
+
+  public void setGetChatsFct(RuntimeFunctionDefinition getChatsFct) {
+    validateFunction(getChatsFct);
+    this.getChatsFct = Optional.of(getChatsFct);
   }
 
   /**
@@ -87,7 +91,17 @@ public class FunctionBackend {
    * @param function
    */
   public void addFunction(RuntimeFunctionDefinition function) {
+    validateFunction(function);
     functions.put(function.getName(), function);
+  }
+
+  public void setGlobalContext(Set<String> context) {
+    functions.values().forEach(fct ->
+    {
+      if (fct.getContext()==null || fct.getContext().isEmpty()) {
+         fct.setContext(fct.getFunction().getParameters().getProperties().keySet().stream().filter(context::contains).toList());
+      }
+    });
   }
 
 
@@ -99,8 +113,20 @@ public class FunctionBackend {
    */
   public CompletableFuture<String> saveChatMessage(ChatMessageInterface message) {
     if (saveChatFct.isEmpty()) return CompletableFuture.completedFuture("Message saving disabled");
-    JsonNode payload = mapper.valueToTree(message);
-    return apiExecutor.executeWrite(saveChatFct.get().getApi().getQuery(), payload);
+    ObjectNode payload = mapper.valueToTree(message);
+    //Inline context variables
+    payload.remove("context");
+    message.getContext().forEach((k, v) -> {
+      ErrorHandling.checkArgument(!payload.has(k), "Context variable overlaps with message: %s", k);
+      payload.set(k, mapper.valueToTree(v));
+    });
+    APIQuery query = saveChatFct.get().getApi();
+    return getExecutor(query).executeQueryAsync(query, payload);
+  }
+
+  private APIExecutor getExecutor(APIQuery query) {
+    ErrorHandling.checkArgument(apiExecutors.containsKey(query.getNameOrDefault()), "Could not find executor for API: %s", query.getNameOrDefault());
+    return apiExecutors.get(query.getNameOrDefault());
   }
 
   /**
@@ -118,12 +144,12 @@ public class FunctionBackend {
     ObjectNode arguments = mapper.createObjectNode();
     arguments.put("limit", limit);
     JsonNode variables = addOrOverrideContext(arguments, getChatsFct.get(), context);
-    String graphqlQuery = getChatsFct.get().getApi().getQuery();
+    APIQuery query = getChatsFct.get().getApi();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     try {
-      String response = apiExecutor.executeQuery(graphqlQuery, variables);
+      String response = getExecutor(query).executeQuery(query, variables);
       JsonNode root = mapper.readTree(response);
       JsonNode messages = root.path("data").path("messages");
 
@@ -189,12 +215,11 @@ public class FunctionBackend {
       throw new IllegalArgumentException("Cannot execute client-side functions: " + functionName);
 
     JsonNode variables = addOrOverrideContext(arguments, function, context);
-
+    APIQuery query = function.getApi();
     return switch (function.getType()) {
       case local -> function.getExecutable().apply(variables).toString();
-      case graphql, rest -> {
-        String graphqlQuery = function.getApi().getQuery();
-        yield apiExecutor.executeQuery(graphqlQuery, variables);
+      case api -> {
+        yield getExecutor(query).executeQuery(query, variables);
       }
       default ->
           throw new IllegalArgumentException("Cannot execute function [" + functionName + "] of type: " + function.getType());

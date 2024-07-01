@@ -17,12 +17,17 @@ public class MockAPIExecutor implements APIExecutor {
   }
 
   @Override
-  public String executeQuery(String readQuery, JsonNode arguments) throws IOException {
-    return queryToResult.apply(readQuery);
+  public void validate(APIQuery query) throws IllegalArgumentException {
+    return;
   }
 
   @Override
-  public CompletableFuture<String> executeWrite(String writeQuery, JsonNode arguments) {
+  public String executeQuery(APIQuery query, JsonNode arguments) throws IOException {
+    return queryToResult.apply(query.getQuery());
+  }
+
+  @Override
+  public CompletableFuture<String> executeQueryAsync(APIQuery query, JsonNode arguments) {
     return CompletableFuture.completedFuture("mock write");
   }
 }

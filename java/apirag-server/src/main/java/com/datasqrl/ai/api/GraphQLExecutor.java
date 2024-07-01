@@ -1,85 +1,74 @@
 package com.datasqrl.ai.api;
 
+import com.datasqrl.ai.util.ErrorHandling;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import lombok.NonNull;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 /**
- * Implements the {@link APIExecutor} interface for GraphQL APIs using OkHTTP as the client.
+ * Implements the {@link APIExecutor} interface for GraphQL APIs using Spring RestTemplate as the client.
  */
+@Service
 public class GraphQLExecutor implements APIExecutor {
 
-  private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
   private static final ObjectMapper objectMapper = new ObjectMapper();
-  private final OkHttpClient client;
+  private final RestTemplate restTemplate;
   private final String endpoint;
   private final Optional<String> authHeader;
 
-  private GraphQLExecutor(@NonNull String endpoint, @NonNull Optional<String> authHeader) {
-    this.client = new OkHttpClient();
+  public GraphQLExecutor(@NonNull String endpoint, @NonNull Optional<String> authHeader) {
+    this.restTemplate = new RestTemplate();
     this.endpoint = endpoint;
     this.authHeader = authHeader;
   }
 
-  public GraphQLExecutor(String endpoint, @NonNull String authHeader) {
-    this(endpoint, Optional.of(authHeader));
-  }
-
-  public GraphQLExecutor(String endpoint) {
-    this(endpoint, Optional.empty());
+  @Override
+  public void validate(APIQuery query) throws IllegalArgumentException {
+    ErrorHandling.checkNotNullOrEmpty(query.getQuery(), "`query` cannot be empty");
   }
 
   @Override
-  public String executeQuery(String readQuery, JsonNode arguments) throws IOException {
-    Request request = buildRequest(readQuery, arguments);
+  public String executeQuery(APIQuery query, JsonNode arguments) throws IOException {
+    HttpEntity<String> request = buildRequest(query.getQuery(), arguments);
+    ResponseEntity<String> response = restTemplate.exchange(endpoint, HttpMethod.POST, request, String.class);
 
-    // Execute the request
-    try (Response response = client.newCall(request).execute()) {
-      if (!response.isSuccessful()) throw new IOException("Query failed: " + response);
-      return response.body().string();
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      throw new IOException("Query failed: " + response);
     }
+
+    return response.getBody();
   }
 
   @Override
-  public CompletableFuture<String> executeWrite(String writeQuery, JsonNode arguments) {
-    Request request = buildRequest(writeQuery, arguments);
-
-    final CompletableFuture<String> future = new CompletableFuture<>();
-    client.newCall(request).enqueue(new Callback() {
-      @Override
-      public void onFailure(Call call, IOException e) {
-        future.completeExceptionally(e);
-      }
-
-      @Override
-      public void onResponse(Call call, Response response) throws IOException {
-        if (!response.isSuccessful()) future.completeExceptionally(new IOException("Query failed " + response));
-        else future.complete(response.body().string());
+  public CompletableFuture<String> executeQueryAsync(APIQuery query, JsonNode arguments) {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        return executeQuery(query, arguments);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
       }
     });
-    return future;
   }
 
-  private Request buildRequest(String query, JsonNode arguments) {
+  private HttpEntity<String> buildRequest(String query, JsonNode arguments) throws IOException {
     JsonNode requestBody = objectMapper.createObjectNode()
         .put("query", query)
         .set("variables", arguments);
-    RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, requestBody.toString());
-    Request.Builder requestBuilder = new Request.Builder()
-        .url(endpoint)
-        .post(body);
-    authHeader.ifPresent(h -> requestBuilder.addHeader("Authorization", h));
-    return requestBuilder.build();
-  }
 
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    authHeader.ifPresent(h -> headers.set("Authorization", h));
+
+    return new HttpEntity<>(objectMapper.writeValueAsString(requestBody), headers);
+  }
 }

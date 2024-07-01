@@ -1,6 +1,6 @@
 [
   {
-    "type": "graphql",
+    "type": "api",
     "function": {
       "name": "character_by_name",
       "description": "Returns information about a character from the show",
@@ -21,7 +21,7 @@
     }
   },
   {
-    "type": "graphql",
+    "type": "api",
     "function": {
       "name": "episode_by_id",
       "description": "Returns information about an episode from the show",
