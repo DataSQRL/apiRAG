@@ -35,6 +35,7 @@ public class OpenAIModelBindings implements ModelBindings<ChatMessage, ChatFunct
     return switch (role) {
       case SYSTEM -> new SystemMessage(message.getContent(), message.getName());
       case USER -> new UserMessage(message.getContent(), message.getName());
+//      TODO: Add function call to assistant message
       case ASSISTANT -> new AssistantMessage(message.getContent(), message.getName());
       case FUNCTION -> new FunctionMessage(message.getContent(), message.getName());
       case TOOL -> new ToolMessage(message.getContent(), message.getName());

@@ -51,12 +51,13 @@ type Products {
 }
 
 type CustomerChatMessage {
-  role: String!
-  content: String!
-  name: String
-  customerid: Int!
-  timestamp: String!
-  uuid: String!
+    role: String!
+    content: String!
+    name: String
+    functionCall: String
+    customerid: Int!
+    timestamp: String!
+    uuid: String!
 }
 
 type Mutation {
@@ -64,10 +65,11 @@ type Mutation {
 }
 
 input ChatMessageInput {
-  role: String!
-  content: String!
-  name: String
-  context: ChatMessageContextInput
+    role: String!
+    content: String!
+    name: String
+    functionCall: String
+    context: ChatMessageContextInput
 }
 
 input ChatMessageContextInput {

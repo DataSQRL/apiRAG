@@ -1,0 +1,14 @@
+{
+  "prompt": "You are a sales assistant at a Nutshop.",
+  "apis": {
+    "default" : {
+      "type": "graphql",
+      "url": "https://localhost:8080/graphql"
+    }
+  },
+  "model" : {
+    "provider" : "openai",
+    "model": "GPT35_TURBO"
+  },
+  "local-functions": ["CurrentTime"]
+}

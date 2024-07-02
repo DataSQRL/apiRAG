@@ -61,8 +61,8 @@ public class FunctionDefinition {
   public static class Parameters {
 
     private String type;
-    private Map<String, Argument> properties;
-    private List<String> required;
+    private Map<String, Argument> properties = Map.of();
+    private List<String> required = List.of();
 
   }
 

@@ -19,7 +19,6 @@ import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelRequest;
 import software.amazon.awssdk.services.bedrockruntime.model.InvokeModelResponse;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -75,7 +74,7 @@ public class BedrockChatProvider extends ChatClientProvider<BedrockChatMessage, 
       GenericChatMessage genericResponse = session.addMessage(responseMessage);
       BedrockFunctionCall functionCall = responseMessage.getFunctionCall();
       if (functionCall != null) {
-        ChatSession.FunctionExecutionOutcome outcome = session.validateAndExecuteFunctionCall(functionCall);
+        ChatSession.FunctionExecutionOutcome<BedrockChatMessage> outcome = session.validateAndExecuteFunctionCall(functionCall, true);
         switch (outcome.status()) {
           case EXECUTE_ON_CLIENT -> {
             return genericResponse;

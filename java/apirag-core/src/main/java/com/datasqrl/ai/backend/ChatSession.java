@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -39,7 +40,8 @@ public class ChatSession<Message, FunctionCall> {
     return convertedMsg;
   }
 
-  protected ContextWindow<GenericChatMessage> getContextWindow(int maxTokens, ModelAnalyzer<Message> analyzer) {
+  // TODO: Make this method return ContextWindow<Message>, otherwise it converts the messages twice for every run of the parent method
+  private ContextWindow<GenericChatMessage> getContextWindow(int maxTokens, ModelAnalyzer<Message> analyzer) {
     GenericChatMessage systemMessage = bindings.convertMessage(bindings.createSystemMessage(this.systemMessage), context);
     final AtomicInteger numTokens = new AtomicInteger(0);
     numTokens.addAndGet(systemMessage.getNumTokens());
@@ -96,32 +98,37 @@ public class ChatSession<Message, FunctionCall> {
     return bindings.convertExceptionToMessage(error);
   }
 
-  public FunctionExecutionOutcome validateAndExecuteFunctionCall(FunctionCall functionCall) {
+  public FunctionExecutionOutcome<Message> validateAndExecuteFunctionCall(FunctionCall functionCall, boolean addResponseToSession) {
     FunctionValidation<String> fctValid = backend.validateFunctionCall(bindings.getFunctionName(functionCall),
         bindings.getFunctionArguments(functionCall));
     if (fctValid.isValid()) {
       if (fctValid.isClientExecuted()) { //return as is - evaluated on frontend
-        return new FunctionExecutionOutcome(FunctionExecutionOutcome.Status.EXECUTE_ON_CLIENT, null);
+        return new FunctionExecutionOutcome<>(FunctionExecutionOutcome.Status.EXECUTE_ON_CLIENT, null, null);
       } else {
         String functionName = bindings.getFunctionName(functionCall);
         log.info("Executing {} with arguments {}", functionName,
             bindings.getFunctionArguments(functionCall).toPrettyString());
         Message functionResponse = this.executeFunctionCall(functionCall, context);
-        log.info("Executed {} with results: {}" , functionName, bindings.getTextContent(functionResponse));
-        this.addMessage(functionResponse);
-        return new FunctionExecutionOutcome(FunctionExecutionOutcome.Status.EXECUTED, null);
+        log.info("Executed {} with results: {}", functionName, bindings.getTextContent(functionResponse));
+        if (addResponseToSession) {
+          this.addMessage(functionResponse);
+        }
+        return new FunctionExecutionOutcome<>(FunctionExecutionOutcome.Status.EXECUTED, null, functionResponse);
       }
     } else {
       Message retryResponse = bindings.newUserMessage("It looks like you tried to call a function, but this has failed with the following error: "
           + fctValid.validationError().errorMessage() + ". Please retry to call the function again. Send ONLY the JSON as a response.");
-      this.addMessage(retryResponse);
-      return new FunctionExecutionOutcome(FunctionExecutionOutcome.Status.VALIDATION_ERROR_RETRY, fctValid.validationError());
+      if (addResponseToSession) {
+        this.addMessage(retryResponse);
+      }
+      return new FunctionExecutionOutcome<>(FunctionExecutionOutcome.Status.VALIDATION_ERROR_RETRY, fctValid.validationError(), retryResponse);
     }
   }
 
-  public record FunctionExecutionOutcome(
+  public record FunctionExecutionOutcome<Message>(
       Status status,
-      FunctionValidation.ValidationError<String> validationError
+      FunctionValidation.ValidationError<String> validationError,
+      Message functionResponse
   ) {
     public enum Status {
       EXECUTED,

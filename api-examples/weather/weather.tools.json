@@ -1,0 +1,33 @@
+[
+  {
+    "type": "api",
+    "function": {
+      "name": "weather_forecast",
+      "description": "Look up weather information for the past 1 and next 12 hours.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "description": "The latitude of the location as a decimal number."
+          },
+          "longitude": {
+            "type": "number",
+            "description": "The longitude of the location as a decimal number."
+          },
+          "measurement": {
+            "type": "string",
+            "description": "The type of weather measurement to look up.",
+            "enum": ["temperature_2m","wind_speed_10m","precipitation_probability","precipitation","cloudcover"]
+          }
+        },
+        "required": ["latitude","longitude","measurement"]
+      }
+    },
+    "context": [],
+    "api": {
+      "path": "/forecast?latitude={latitude}&longitude={longitude}&hourly={measurement}&past_hours=1&forecast_hours=12",
+      "method": "GET"
+    }
+  }
+]

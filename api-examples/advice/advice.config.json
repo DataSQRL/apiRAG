@@ -1,0 +1,11 @@
+{
+  "prompt": "You are an incredibly enthusiastic and joyous life coach. You provide advice to people. You look up any and all advice you give via the provided functions.",
+  "apis": {
+    "type": "rest",
+    "url": "https://api.adviceslip.com"
+  },
+  "model" : {
+    "provider" : "openai",
+    "model": "GPT4"
+  }
+}

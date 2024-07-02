@@ -3,7 +3,10 @@ IMPORT nutshop-data.Products TIMESTAMP updated;
 IMPORT nutshop-data.Orders TIMESTAMP epochMilliToTimestamp(time) AS timestamp;
 IMPORT nutshop-c360.AddChatMessage;
 
-CustomerChatMessage := SELECT c.role, c.content, c.name, ctx.customerid, c._source_time AS timestamp, c._uuid AS uuid FROM AddChatMessage c JOIN c.context ctx ORDER BY timestamp DESC;
+CustomerChatMessage := SELECT c.role, c.content, c.name, c.functionCall, ctx.customerid, c._source_time AS timestamp,
+                        c._uuid AS uuid
+                       FROM AddChatMessage c JOIN c.context ctx ORDER BY timestamp DESC;
+
 
 Products := DISTINCT Products ON id ORDER BY updated DESC;
 

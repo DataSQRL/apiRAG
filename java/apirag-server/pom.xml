@@ -23,6 +23,21 @@
     </dependency>
     <dependency>
       <groupId>com.datasqrl</groupId>
+      <artifactId>apirag-udf</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datasqrl</groupId>
+      <artifactId>apirag-graphql</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datasqrl</groupId>
+      <artifactId>apirag-rest</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datasqrl</groupId>
       <artifactId>apirag-openai</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -34,6 +49,11 @@
     <dependency>
       <groupId>com.datasqrl</groupId>
       <artifactId>apirag-bedrock</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.datasqrl</groupId>
+      <artifactId>apirag-vertex</artifactId>
       <version>${project.version}</version>
     </dependency>
 

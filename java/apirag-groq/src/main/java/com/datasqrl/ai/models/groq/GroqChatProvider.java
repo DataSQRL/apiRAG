@@ -122,7 +122,7 @@ public class GroqChatProvider extends ChatClientProvider<ChatMessage, ChatFuncti
       GenericChatMessage genericResponse = session.addMessage(responseMessage);
       ChatFunctionCall functionCall = responseMessage.getFunctionCall();
       if (functionCall != null) {
-        ChatSession.FunctionExecutionOutcome outcome = session.validateAndExecuteFunctionCall(functionCall);
+        ChatSession.FunctionExecutionOutcome<ChatMessage> outcome = session.validateAndExecuteFunctionCall(functionCall, true);
         switch (outcome.status()) {
           case EXECUTE_ON_CLIENT -> {
             return genericResponse;

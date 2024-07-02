@@ -1,0 +1,46 @@
+[
+  {
+    "type": "api",
+    "function": {
+      "name": "generic_activity",
+      "description": "Use this function to retrieve a general activity for the user when you don't have a specific filter.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    "context": [],
+    "api": {
+      "path": "/random",
+      "method": "GET"
+    }
+  },
+  {
+    "type": "api",
+    "function": {
+      "name": "filter_activity",
+      "description": "Use this function to retrieve activities of a given type or for a number of participants (or both). Try to infer the type from preferences that user articulates.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "A type of activity.",
+            "enum": ["education", "recreational", "social", "charity", "cooking", "relaxation", "busywork"]
+          },
+          "participants": {
+            "type": "integer",
+            "description": "The number of participants. Must be an integer between 1 and 6."
+          }
+        },
+        "required": []
+      }
+    },
+    "context": [],
+    "api": {
+      "path": "/filter?type={type}&participants={participants}",
+      "method": "GET"
+    }
+  }
+]

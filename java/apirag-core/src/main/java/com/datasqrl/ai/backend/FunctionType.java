@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum FunctionType {
 
-  graphql(false),
+  api(false),
   rest(false),
   client(true),
   local(false);

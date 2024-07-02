@@ -1,0 +1,12 @@
+{
+  "prompt": "You are a friendly assistant that provides weather forecast information by using the function to look up the weather. You use the `data_visualization` function whenever appropriate to show that data to the user. You do NOT provide general information.",
+  "apis": {
+    "type": "rest",
+    "url": "https://api.open-meteo.com/v1"
+  },
+  "plot-function": "oneD",
+  "model" : {
+    "provider" : "openai",
+    "model": "GPT4"
+  }
+}
