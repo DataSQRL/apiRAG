@@ -21,7 +21,7 @@ public record OpenAITokenCounter(Encoding encoding) implements ModelAnalyzer<Cha
     return numTokens + numTokens / 10; //Add a 10% buffer
   }
 
-  private int countTokens(String message) {
+  public int countTokens(String message) {
     return encoding.countTokens(message);
   }
 

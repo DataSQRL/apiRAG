@@ -1,0 +1,44 @@
+[
+  {
+    "type": "api",
+    "function": {
+      "name": "character_by_name",
+      "description": "Returns information about a character from the show",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The full name of a character from the show, e.g. `Morty Smith`"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    "context": [],
+    "api": {
+      "query": "query characterByName($name: String!) {\n  characters(filter: {name: $name}) {\n    results {\n      name\n      species\n      status\n      type\n      gender\n      origin {\n        name\n        type\n        dimension\n      }\n      location {\n        name\n        type\n        dimension\n      }\n      episode {\n        name\n        air_date\n        episode\n      }\n      created\n    }\n  }\n}"
+    }
+  },
+  {
+    "type": "api",
+    "function": {
+      "name": "episode_by_id",
+      "description": "Returns information about an episode from the show",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "episodeid": {
+            "type": "string",
+            "description": "The identifier of an episode of the form `S##E##` where # is a single digit. For example, the episode id for episode 5 in season 2 is `S02E05`"
+          }
+        },
+        "required": ["episodeid"]
+      }
+    },
+    "context": [],
+    "api": {
+      "query": "query episodeById($episodeid: String!) {\n  episodes(filter: {episode: $episodeid}) {\n    results {\n      name\n      air_date\n      characters {\n        name\n        species\n        type\n        gender\n      }\n    }\n  }\n}"
+    }
+  }
+]

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.datasqrl</groupId>
+        <artifactId>acorn</artifactId>
+        <version>0.1.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>acorn-comparison</artifactId>
+    <name>Acorn - Model Comparison</name>
+    <packaging>jar</packaging>
+
+
+    <properties>
+        <micrometer.version>1.13.1</micrometer.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-openai</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-groq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-bedrock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-vertex</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-config</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.datasqrl</groupId>
+            <artifactId>acorn-trace</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>${micrometer.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

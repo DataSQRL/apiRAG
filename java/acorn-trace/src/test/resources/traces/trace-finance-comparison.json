@@ -1,0 +1,133 @@
+{
+  "entries": [
+    {
+      "type": "FunctionCall",
+      "requestId": 1,
+      "invocationId": 0,
+      "name": "transactions",
+      "internal": true,
+      "arguments": {
+        "fromTime": "2024-05-01T00:00:00-00:00",
+        "toTime": "2024-06-01T00:00:00-00:00"
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 1,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          2601.59,
+          2730.05,
+          2328.52,
+          2344.55,
+          2218.76
+        ]
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 2,
+      "invocationId": 0,
+      "name": "spending_by_category",
+      "internal": true,
+      "arguments": {
+        "limit": 12
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 2,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          1945.54,
+          352.26,
+          374.79,
+          214.94,
+          930.29,
+          7353.99,
+          1275.92,
+          1521.56,
+          2652.66,
+          2869.62,
+          614.45,
+          439.4
+        ],
+        "title": "Spending by Category"
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 3,
+      "invocationId": 0,
+      "name": "spending_by_category",
+      "internal": true,
+      "arguments": {
+        "limit": 12
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 3,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          1945.54,
+          352.26,
+          374.79,
+          214.94,
+          930.29,
+          7353.99,
+          1275.92,
+          1521.56,
+          2652.66,
+          2869.62,
+          614.45,
+          439.4
+        ],
+        "chartType": "pie"
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 4,
+      "invocationId": 0,
+      "name": "spending_by_day",
+      "internal": true,
+      "arguments": {
+        "fromTime": "2024-05-21T00:00:00-00:00",
+        "toTime": "2024-06-04T00:00:00-00:00"
+      }
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 4,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          668.92,
+          3908.72,
+          1323.71,
+          1190.96,
+          661.8,
+          1408.73,
+          4131,
+          4122.81,
+          6959.41,
+          2425.54,
+          5917.4
+        ],
+        "chartType": "line"
+      }
+    }
+  ]
+}

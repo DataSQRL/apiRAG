@@ -10,6 +10,5 @@
     "provider" : "openai",
     "model": "GPT35_TURBO"
   },
-  "local_functions": ["CurrentTime"],
-  "client_functions": ["datacharts"]
+  "functions": ["CurrentTime", "ui/datacharts.json"]
 }

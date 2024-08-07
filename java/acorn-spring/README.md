@@ -1,22 +1,10 @@
 # Spring Boot
 
-This module contains a generic implementation of a ChatBot as a Spring Boot application with Acorn Agent.
+This module contains the infrastructure for building AI agents with the Spring web development framework. Include the `acorn-spring` in your Spring project as a dependency.
 
-* **[AcornAgentServer](src/main/java/com/datasqrl/ai/spring)**: A spring boot server that reads a model, chat, and tools configuration from file to provide a ChatBot.
+This module includes:
 * **[API Executors](src/main/java/com/datasqrl/ai/api)**: Spring specific executors for GraphQL, REST, and JDBC.
 * **[ChatBot Frontend](src/main/resources/public)**: Javascript implementation of a ChatBot frontend with custom data visualization.
+* **Utility Classes**: `InputMessage` and `ResponseMessage` for the interface of a ChatBot implementation.
 
-## Run the Spring Boot Application
-
-First, compile the entire maven project in the [root folder](../) with:
-```
-mvn package
-```
-
-Run the `AcornAgentServer` with the configuration parameters and the API Keys
-```
- java -DOPENAI_API_KEY=XXXX -jar acorn-spring/target/acorn-spring-0.1.0.jar --agent.config=[CONFIG_FILE] --agent.tools=[TOOLS_FILE] 
-```
-where CONFIG_FILE is a [configuration file](/java/acorn-config/) folder (e.g. [activity.openai.config.json](/examples/activity/activity.openai.config.json)) and TOOLS_FILE is a  [tools file](TOOLS_CONFIG.md) (e.g. [activity tools](/examples/activity/activity.tools.json)).
-
-Note, that you have to pass in environmental variables for the specific model that you are using. Environmental variables need to be specified right after `java` in the command.
+For an example of how to use this module to build an AI Agent with Spring Boot, take a look at the [acorn-server module](../acorn-server).

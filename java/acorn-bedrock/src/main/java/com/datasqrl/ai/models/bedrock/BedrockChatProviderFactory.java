@@ -1,5 +1,7 @@
 package com.datasqrl.ai.models.bedrock;
 
+import com.datasqrl.ai.tool.ModelObservability;
+import com.datasqrl.ai.tool.ToolManager;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.datasqrl.ai.models.ChatProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
@@ -17,7 +19,7 @@ public class BedrockChatProviderFactory implements ChatProviderFactory {
   }
 
   @Override
-  public ChatProvider<?, ?> create(Configuration modelConfiguration, ToolsBackend backend, String prompt) {
-    return new BedrockChatProvider(new BedrockModelConfiguration(modelConfiguration), backend, prompt);
+  public ChatProvider create(Configuration modelConfiguration, ToolManager backend, String prompt, ModelObservability observability) {
+    return new BedrockChatProvider(new BedrockModelConfiguration(modelConfiguration), backend, prompt, observability);
   }
 }

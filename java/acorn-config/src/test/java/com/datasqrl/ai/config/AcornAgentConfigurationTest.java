@@ -21,8 +21,8 @@ public class AcornAgentConfigurationTest {
     AcornAgentConfiguration config1 = AcornAgentConfiguration.fromFile(nutshopConfig, nutshopTools);
     AcornAgentConfiguration config2 = AcornAgentConfiguration.fromFile(nutshopConfig, nutshopGraphQl);
 
-    assertEquals(5, config1.getFunctionBackend().getFunctions().size());
-    assertEquals(7, config2.getFunctionBackend().getFunctions().size());
+    assertEquals(5, config1.getToolManager().getFunctions().size());
+    assertEquals(7, config2.getToolManager().getFunctions().size());
   }
 
 }

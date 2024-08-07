@@ -11,5 +11,6 @@ public class AcornAgentServerProperties {
 
   private String config;
   private String tools;
+  private boolean tracingEnabled = false;
 
 }

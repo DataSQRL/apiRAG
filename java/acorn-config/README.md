@@ -10,7 +10,7 @@ Here is an example configuration file for an agent:
 ```json
 {
   "prompt": "This is the system prompt that tells the LLM how to act.",
-  "local_functions": ["CurrentTime"],
+  "functions": ["CurrentTime"],
   "model" : {
     "provider" : "openai",
     "name": "gpt-3.5-turbo",
@@ -26,12 +26,11 @@ Here is an example configuration file for an agent:
 
 The top level configuration options are:
 
-| Field Name         | Descriptions                                                                                                                                                    | Required? | Default |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|---------|
-| `prompt`           | The system prompt for the LLM                                                                                                                                   | Yes       | -       |
-| `local_functions`  | An array of built-in function names to include into the tools. Names are case sensitive. See [Built-in functions](../acorn-udf/src/main/java/com/datasqrl/ai/function/builtin) for more details.             | No        | none    |
-| `client_functions` | An array of client function names to include into the tools. See [ClientSideFunctions](src/main/java/com/datasqrl/ai/config/ClientSideFunctions.java) for list. | No        | none     |
-| `context`          | An array of context keys that specify the session context parameters used to pass user, session, or other secure information to tools and for storing messages. | No        | none    |
+| Field Name   | Descriptions                                                                                                                                                                                                                                                                                                                  | Required? | Default |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|---------|
+| `prompt`     | The system prompt for the LLM                                                                                                                                                                                                                                                                                                 | Yes       | -       |
+| `functions`  | An array of built-in function names to include into the tools. Names are case sensitive. See [Built-in functions](../acorn-udf/src/main/java/com/datasqrl/ai/function/builtin) for more details. Alternatively, client function can be loaded from a resource file that ends in `.json` - specify the relative resource path. | No        | none    |
+| `context`    | An array of context keys that specify the session context parameters used to pass user, session, or other secure information to tools and for storing messages.                                                                                                                                                               | No        | none    |
 
 ## Model Configuration
 

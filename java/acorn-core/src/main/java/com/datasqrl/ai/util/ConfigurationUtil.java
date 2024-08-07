@@ -1,9 +1,11 @@
 package com.datasqrl.ai.util;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Resources;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.MapConfiguration;
 
@@ -68,6 +71,17 @@ public class ConfigurationUtil {
       return ""; // No extension found
     }
     return fileName.substring(lastIndexOfDot + 1).trim().toLowerCase();
+  }
+
+  public static Configuration jsonToConfiguration(JsonNode jsonNode) {
+    if (jsonNode.isEmpty()) return new BaseConfiguration();
+    Map<String, Object> map = new HashMap<>();
+    Iterator<Map.Entry<String, JsonNode>> fields = jsonNode.fields();
+    while (fields.hasNext()) {
+      Map.Entry<String, JsonNode> field = fields.next();
+      map.put(field.getKey(), field.getValue().asText());
+    }
+    return new MapConfiguration(map);
   }
 
 }

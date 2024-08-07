@@ -17,7 +17,7 @@ public record GroqTokenCounter(HuggingFaceTokenizer tokenizer) implements ModelA
     return numTokens + numTokens / 10; //Add a 10% buffer
   }
 
-  private int countTokens(String message) {
+  public int countTokens(String message) {
     if (message == null) {
       return 0;
     }

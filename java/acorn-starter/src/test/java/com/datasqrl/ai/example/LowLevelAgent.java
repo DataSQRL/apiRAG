@@ -8,6 +8,7 @@ import com.datasqrl.ai.models.ContextWindow;
 import com.datasqrl.ai.models.ModelAnalyzer;
 import com.datasqrl.ai.models.openai.OpenAIModelBindings;
 import com.datasqrl.ai.models.openai.OpenAIModelConfiguration;
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.FunctionValidation;
 import com.datasqrl.ai.tool.GenericChatMessage;
 import com.datasqrl.ai.tool.RuntimeFunctionDefinition;
@@ -28,8 +29,6 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.configuration2.MapConfiguration;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +77,7 @@ public class LowLevelAgent {
    *
    * @param context        The user context that might be needed to execute functions
    */
-  public void start(Map<String, Object> context) {
+  public void start(Context context) {
     Scanner scanner = new Scanner(System.in);
     OpenAIModelBindings modelBindings = new OpenAIModelBindings(chatConfig);
     ChatSession<ChatMessage, ChatFunctionCall> session = new MyChatSession(toolsBackend, context, systemPrompt, modelBindings);
@@ -100,6 +99,7 @@ public class LowLevelAgent {
           .maxTokens(chatConfig.getMaxOutputTokens())
           .logitBias(new HashMap<>())
           .build();
+      context.nextInvocation();
       Flowable<ChatCompletionChunk> flowable = service.streamChatCompletion(chatCompletionRequest);
 
       AtomicBoolean isFirst = new AtomicBoolean(true);
@@ -151,7 +151,7 @@ public class LowLevelAgent {
 
   class MyChatSession extends ChatSession<ChatMessage, ChatFunctionCall> {
 
-    public MyChatSession(ToolsBackend toolsBackend, Map<String, Object> context, String systemPrompt, OpenAIModelBindings modelBindings) {
+    public MyChatSession(ToolsBackend toolsBackend, Context context, String systemPrompt, OpenAIModelBindings modelBindings) {
       super(toolsBackend, context, systemPrompt, modelBindings);
     }
 
@@ -208,6 +208,6 @@ public class LowLevelAgent {
             "temperature", 0.3)));
 
     LowLevelAgent agent = new LowLevelAgent(toolsBackend, chatConfig, systemPrompt, openaiKey);
-    agent.start(Map.of());
+    agent.start(Context.of());
   }
 }

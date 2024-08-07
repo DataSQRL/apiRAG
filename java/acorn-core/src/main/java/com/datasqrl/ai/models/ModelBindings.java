@@ -1,5 +1,6 @@
 package com.datasqrl.ai.models;
 
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Map;
@@ -8,7 +9,7 @@ public interface ModelBindings<Message, FunctionCall> {
 
   Message convertMessage(GenericChatMessage message);
 
-  GenericChatMessage convertMessage(Message message, Map<String, Object> sessionContext);
+  GenericChatMessage convertMessage(Message message, Context sessionContext);
 
   boolean isUserOrAssistantMessage(Message message);
 

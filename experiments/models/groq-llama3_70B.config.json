@@ -1,0 +1,6 @@
+{
+    "provider" : "groq",
+    "name": "llama3-groq-70b-8192-tool-use-preview",
+    "max_output_tokens": 2048,
+    "temperature": 0.3
+}

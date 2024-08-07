@@ -18,6 +18,9 @@
     <module>acorn-config</module>
     <module>acorn-starter</module>
     <module>acorn-spring</module>
+    <module>acorn-trace</module>
+    <module>acorn-comparison</module>
+    <module>acorn-server</module>
   </modules>
 
   <description>Acorn Parent POM</description>
@@ -58,7 +61,9 @@
     <graphql-java.version>22.0</graphql-java.version>
     <reflections.version>0.10.2</reflections.version>
     <okhttp.version>4.12.0</okhttp.version>
+    <spring.version>6.1.11</spring.version>
     <h2.version>2.2.224</h2.version>
+
   </properties>
 
   <dependencies>

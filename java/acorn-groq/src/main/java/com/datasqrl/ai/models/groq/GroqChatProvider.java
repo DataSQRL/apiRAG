@@ -3,11 +3,15 @@ package com.datasqrl.ai.models.groq;
 import static com.theokanning.openai.service.OpenAiService.defaultClient;
 import static com.theokanning.openai.service.OpenAiService.defaultObjectMapper;
 
+import com.datasqrl.ai.models.AbstractChatProvider;
 import com.datasqrl.ai.models.ChatSession;
 import com.datasqrl.ai.models.ContextWindow;
+import com.datasqrl.ai.tool.Context;
+import com.datasqrl.ai.tool.ModelObservability;
+import com.datasqrl.ai.tool.ModelObservability.ModelInvocation;
+import com.datasqrl.ai.tool.ToolManager;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.datasqrl.ai.tool.GenericChatMessage;
-import com.datasqrl.ai.models.ChatProvider;
 import com.datasqrl.ai.util.ConfigurationUtil;
 import com.datasqrl.ai.util.JsonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,8 +30,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -43,7 +48,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Slf4j
-public class GroqChatProvider extends ChatProvider<ChatMessage, ChatFunctionCall> {
+public class GroqChatProvider extends AbstractChatProvider<ChatMessage, ChatFunctionCall> {
 
   private final GroqModelConfiguration config;
   private final OpenAiService service;
@@ -51,8 +56,8 @@ public class GroqChatProvider extends ChatProvider<ChatMessage, ChatFunctionCall
   private ChatFunctionCall errorFunctionCall = null;
   public static final String GROQ_URL = "https://api.groq.com/openai/v1/";
 
-  public GroqChatProvider(GroqModelConfiguration config, ToolsBackend backend, String systemPrompt) {
-    super(backend, new GroqModelBindings(config));
+  public GroqChatProvider(GroqModelConfiguration config, ToolManager backend, String systemPrompt, ModelObservability observability) {
+    super(backend, new GroqModelBindings(config), observability);
     this.config = config;
     this.systemPrompt = systemPrompt;
     String groqApiKey = ConfigurationUtil.getEnvOrSystemVariable("GROQ_API_KEY");
@@ -73,7 +78,7 @@ public class GroqChatProvider extends ChatProvider<ChatMessage, ChatFunctionCall
   }
 
   @Override
-  public GenericChatMessage chat(String message, Map<String, Object> context) {
+  public GenericChatMessage chat(String message, Context context) {
     ChatSession<ChatMessage, ChatFunctionCall> session = new ChatSession<>(backend, context, systemPrompt, bindings);
     ChatMessage chatMessage = new UserMessage(message);
     session.addMessage(chatMessage);
@@ -96,8 +101,17 @@ public class GroqChatProvider extends ChatProvider<ChatMessage, ChatFunctionCall
           .build();
       AssistantMessage responseMessage;
       try {
+        TimeUnit.SECONDS.sleep(30);
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+      ModelInvocation invocation = observability.start();
+      context.nextInvocation();
+      try {
         responseMessage = service.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
+        invocation.stop(contextWindow.getNumTokens(), bindings.getTokenCounter().countTokens(responseMessage));
       } catch (OpenAiHttpException e) {
+        invocation.fail(e);
         // Workaround for groq API bug that throws 400 on some function calls
         if (e.statusCode == 400 && errorFunctionCall != null) {
           responseMessage = new AssistantMessage("", "", null, errorFunctionCall);
@@ -128,7 +142,7 @@ public class GroqChatProvider extends ChatProvider<ChatMessage, ChatFunctionCall
             return genericResponse;
           }
           case VALIDATION_ERROR_RETRY -> {
-            if (retryCount >= ChatProvider.FUNCTION_CALL_RETRIES_LIMIT) {
+            if (retryCount >= AbstractChatProvider.FUNCTION_CALL_RETRIES_LIMIT) {
               throw new RuntimeException("Too many function call retries for the same function.");
             } else {
               retryCount++;

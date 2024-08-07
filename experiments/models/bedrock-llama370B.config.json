@@ -1,0 +1,6 @@
+{
+    "provider" : "bedrock",
+    "name": "meta.llama3-70b-instruct-v1:0",
+    "region": "us-west-2",
+    "temperature": 0.3
+}

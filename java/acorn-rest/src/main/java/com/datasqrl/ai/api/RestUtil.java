@@ -16,7 +16,7 @@ import lombok.SneakyThrows;
 
 public class RestUtil {
 
-  record RestCall(String path, String method, JsonNode body) {}
+  public record RestCall(String path, String method, JsonNode body) {}
 
   /**
    * Creates a RestCall object based on the APIQuery and JsonNode arguments provided.

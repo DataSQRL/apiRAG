@@ -2,6 +2,8 @@ package com.datasqrl.ai.models.vertex;
 
 import com.datasqrl.ai.models.ChatProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
+import com.datasqrl.ai.tool.ModelObservability;
+import com.datasqrl.ai.tool.ToolManager;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.google.auto.service.AutoService;
 import org.apache.commons.configuration2.Configuration;
@@ -17,7 +19,7 @@ public class VertexChatProviderFactory implements ChatProviderFactory {
   }
 
   @Override
-  public ChatProvider<?, ?> create(Configuration modelConfiguration, ToolsBackend backend, String prompt) {
-    return new VertexChatProvider(new VertexModelConfiguration(modelConfiguration), backend, prompt);
+  public ChatProvider create(Configuration modelConfiguration, ToolManager backend, String prompt, ModelObservability observability) {
+    return new VertexChatProvider(new VertexModelConfiguration(modelConfiguration), backend, prompt, observability);
   }
 }

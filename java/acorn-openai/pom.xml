@@ -42,6 +42,7 @@
       <artifactId>logging-interceptor</artifactId>
       <version>4.12.0</version>
     </dependency>
+
   </dependencies>
   <repositories>
     <repository>

@@ -5,7 +5,9 @@ import com.datasqrl.ai.api.APIExecutorFactory;
 import com.datasqrl.ai.api.GraphQLExecutorFactory;
 import com.datasqrl.ai.models.ChatProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
+import com.datasqrl.ai.tool.ModelObservability;
 import com.datasqrl.ai.tool.RuntimeFunctionDefinition;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.datasqrl.ai.tool.ToolsBackendFactory;
@@ -45,7 +47,7 @@ public class ConfigurableChatBot {
    *
    * @param context        The user context that might be needed to execute functions
    */
-  public void start(Map<String, Object> context) throws IOException {
+  public void start(Context context) throws IOException {
     Scanner scanner = new Scanner(System.in);
     System.out.print("First Query: ");
     String message = scanner.nextLine();
@@ -70,14 +72,14 @@ public class ConfigurableChatBot {
         "url", "https://rickandmortyapi.com/graphql"
     )), "rickandmortyapi");
     ToolsBackend toolsBackend = ToolsBackendFactory.of(tools, Map.of(APIExecutorFactory.DEFAULT_NAME, apiExecutor));
-    ChatProvider<?, ?> chatProvider = ChatProviderFactory.fromConfiguration(Map.of(
+    ChatProvider chatProvider = ChatProviderFactory.fromConfiguration(Map.of(
         "provider", "groq",
         "name", "mixtral-8x7b-32768",
         "temperature", 0.8
-    ), toolsBackend, systemPrompt);
+    ), toolsBackend, systemPrompt, ModelObservability.NOOP);
 
     ConfigurableChatBot chatBot = new ConfigurableChatBot(chatProvider);
-    chatBot.start(Map.of());
+    chatBot.start(Context.of());
   }
 
 }

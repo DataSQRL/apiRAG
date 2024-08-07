@@ -1,6 +1,8 @@
 package com.datasqrl.ai.models;
 
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
+import com.datasqrl.ai.tool.ToolManager;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.datasqrl.ai.tool.FunctionValidation;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +19,13 @@ public class ChatSession<Message, FunctionCall> {
 
   private static final int MESSAGE_HISTORY_LIMIT = 100;
 
-  protected final ToolsBackend backend;
-  protected final Map<String, Object> context;
+  protected final ToolManager backend;
+  protected final Context context;
   protected final String systemMessage;
   protected final ModelBindings<Message, FunctionCall> bindings;
   protected final List<GenericChatMessage> messages = new ArrayList<>();
 
-  public ChatSession(ToolsBackend backend, Map<String, Object> context, String systemMessage,
+  public ChatSession(ToolManager backend, Context context, String systemMessage,
                      ModelBindings<Message, FunctionCall> bindings) {
     this.backend = backend;
     this.context = context;
@@ -84,7 +85,7 @@ public class ChatSession<Message, FunctionCall> {
         bindings.getFunctionArguments(chatFunctionCall)).translate(bindings::convertExceptionToMessage);
   }
 
-  public Message executeFunctionCall(FunctionCall chatFunctionCall, Map<String, Object> context) {
+  public Message executeFunctionCall(FunctionCall chatFunctionCall, Context context) {
     String functionName = bindings.getFunctionName(chatFunctionCall);
     JsonNode functionArguments = bindings.getFunctionArguments(chatFunctionCall);
     try {

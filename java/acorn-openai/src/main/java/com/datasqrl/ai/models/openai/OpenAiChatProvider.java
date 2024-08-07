@@ -1,10 +1,14 @@
 package com.datasqrl.ai.models.openai;
 
+import com.datasqrl.ai.models.AbstractChatProvider;
 import com.datasqrl.ai.models.ChatSession;
 import com.datasqrl.ai.models.ContextWindow;
+import com.datasqrl.ai.tool.Context;
+import com.datasqrl.ai.tool.ModelObservability;
+import com.datasqrl.ai.tool.ModelObservability.ModelInvocation;
+import com.datasqrl.ai.tool.ToolManager;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.datasqrl.ai.tool.GenericChatMessage;
-import com.datasqrl.ai.models.ChatProvider;
 import com.datasqrl.ai.util.ConfigurationUtil;
 import com.datasqrl.ai.util.JsonUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,26 +20,26 @@ import com.theokanning.openai.completion.chat.UserMessage;
 import com.theokanning.openai.service.OpenAiService;
 import java.time.Duration;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class OpenAiChatProvider extends ChatProvider<ChatMessage, ChatFunctionCall> {
+public class OpenAiChatProvider extends AbstractChatProvider<ChatMessage, ChatFunctionCall> {
 
   private final OpenAIModelConfiguration config;
   private final OpenAiService service;
   private final String systemPrompt;
 
-  public OpenAiChatProvider(OpenAIModelConfiguration config, ToolsBackend backend, String systemPrompt) {
-    super(backend, new OpenAIModelBindings(config));
+  public OpenAiChatProvider(OpenAIModelConfiguration config, ToolManager backend, String systemPrompt, ModelObservability observability) {
+    super(backend, new OpenAIModelBindings(config), observability);
     this.config = config;
     this.systemPrompt = systemPrompt;
     String openAIToken = ConfigurationUtil.getEnvOrSystemVariable("OPENAI_API_KEY");
     this.service = new OpenAiService(openAIToken, Duration.ofSeconds(60));
   }
 
-  public GenericChatMessage chat(String message, Map<String, Object> context) {
+  @Override
+  public GenericChatMessage chat(String message, Context context) {
     ChatSession<ChatMessage, ChatFunctionCall> session = new ChatSession<>(backend, context, systemPrompt, bindings);
     ChatMessage chatMessage = new UserMessage(message);
     session.addMessage(chatMessage);
@@ -56,7 +60,10 @@ public class OpenAiChatProvider extends ChatProvider<ChatMessage, ChatFunctionCa
           .maxTokens(config.getMaxOutputTokens())
           .logitBias(new HashMap<>())
           .build();
+      ModelInvocation invocation = observability.start();
+      context.nextInvocation();
       AssistantMessage responseMessage = service.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
+      invocation.stop(contextWindow.getNumTokens(), bindings.getTokenCounter().countTokens(responseMessage));
       log.debug("Response:\n{}", responseMessage);
       String res = responseMessage.getTextContent();
       // Workaround for openai4j who doesn't recognize some function calls
@@ -79,7 +86,7 @@ public class OpenAiChatProvider extends ChatProvider<ChatMessage, ChatFunctionCa
             return genericResponse;
           }
           case VALIDATION_ERROR_RETRY -> {
-            if (retryCount >= ChatProvider.FUNCTION_CALL_RETRIES_LIMIT) {
+            if (retryCount >= AbstractChatProvider.FUNCTION_CALL_RETRIES_LIMIT) {
               throw new RuntimeException("Too many function call retries for the same function.");
             } else {
               retryCount++;
@@ -95,7 +102,7 @@ public class OpenAiChatProvider extends ChatProvider<ChatMessage, ChatFunctionCa
     }
   }
 
-  public static Optional<ChatFunctionCall> getFunctionCallFromText(String text) {
+  private static Optional<ChatFunctionCall> getFunctionCallFromText(String text) {
     Optional<JsonNode> functionCall = JsonUtil.parseJson(text);
     if (functionCall.isEmpty()) {
       log.error("Could not parse function text [{}]:\n", text);

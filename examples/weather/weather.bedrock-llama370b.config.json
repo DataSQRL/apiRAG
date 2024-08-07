@@ -4,7 +4,7 @@
     "type": "rest",
     "url": "https://api.open-meteo.com/v1"
   },
-  "client_functions": "datacharts",
+  "functions": "ui/datacharts.json",
   "model" : {
     "provider" : "bedrock",
     "name": "meta.llama3-70b-instruct-v1:0",

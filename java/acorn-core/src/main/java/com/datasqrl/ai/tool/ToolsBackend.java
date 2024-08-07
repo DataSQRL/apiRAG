@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
  *
  */
 @Slf4j
-public class ToolsBackend {
+public class ToolsBackend implements ToolManager {
 
   @Getter
   private final Map<String, RuntimeFunctionDefinition> functions = new HashMap<>();
@@ -142,7 +142,7 @@ public class ToolsBackend {
    * @return Saved messages for the provided context
    */
   public <ChatMessage extends ChatMessageInterface> List<ChatMessage> getChatMessages(
-      @NonNull Map<String, Object> context, int limit, @NonNull Class<ChatMessage> clazz) {
+      @NonNull Context context, int limit, @NonNull Class<ChatMessage> clazz) {
     if (getChatsFct.isEmpty()) return List.of();
     ObjectNode arguments = mapper.createObjectNode();
     arguments.put("limit", limit);
@@ -214,7 +214,7 @@ public class ToolsBackend {
    * @return The result as string
    * @throws IOException
    */
-  public String executeFunctionCall(String functionName, JsonNode arguments, @NonNull Map<String, Object> context) throws IOException {
+  public String executeFunctionCall(String functionName, JsonNode arguments, @NonNull Context context) throws IOException {
     RuntimeFunctionDefinition function = functions.get(functionName);
     if (function == null) throw new IllegalArgumentException("Not a valid function name: " + functionName);
     if (function.getType().isClientExecuted())
@@ -230,7 +230,7 @@ public class ToolsBackend {
     };
   }
 
-  private JsonNode addOrOverrideContext(JsonNode arguments, RuntimeFunctionDefinition function, @NonNull Map<String, Object> context) {
+  private JsonNode addOrOverrideContext(JsonNode arguments, RuntimeFunctionDefinition function, @NonNull Context context) {
     // Create a copy of the original JsonNode to add context
     ObjectNode copyJsonNode;
     if (arguments == null || arguments.isEmpty()) {

@@ -4,8 +4,6 @@ This is the Java implementation of Acorn Agent which provides the libraries you 
 
 ## Getting Started
 
-> We are in the process of releasing the Maven/Gradle dependencies. This will take another few days. In the meantime, please build the dependencies locally.
-
 ### Spring Boot
 
 To build an AI agent as a web application with Spring Boot, include the following dependency in your project and use the generic implementation in [AcornAgentServer](acorn-spring/src/main/java/com/datasqrl/ai/spring/AcornAgentServer.java) as a starting point for your own.

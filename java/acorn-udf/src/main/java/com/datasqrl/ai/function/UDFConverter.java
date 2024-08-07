@@ -1,6 +1,6 @@
 package com.datasqrl.ai.function;
 
-import com.datasqrl.ai.tool.ToolsBackend;
+import com.datasqrl.ai.tool.GenericFunctionCall;
 import com.datasqrl.ai.tool.FunctionDefinition;
 import com.datasqrl.ai.tool.FunctionType;
 import com.datasqrl.ai.tool.RuntimeFunctionDefinition;
@@ -15,6 +15,8 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -27,60 +29,74 @@ public class UDFConverter {
 
   private static final ObjectMapper mapper = new ObjectMapper();
 
-  /**
-   * Adds a user defined function to the provided repository.
-   *
-   * @param backend The backend
-   * @param clazz
-   */
-  public static void addUserDefinedFunction(ToolsBackend backend, Class<? extends UserDefinedFunction> clazz) {
-    backend.addFunction(getRuntimeFunctionDefinition(clazz));
-  }
 
-  public static void addClientFunction(ToolsBackend backend, URL functionDefinitionURL) {
+  public static RuntimeFunctionDefinition getClientFunction(URL functionDefinitionURL) {
     ErrorHandling.checkArgument(functionDefinitionURL!=null, "Invalid url: %s", functionDefinitionURL);
     ObjectMapper objectMapper = new ObjectMapper();
     try {
       FunctionDefinition plotFunctionDef = objectMapper.readValue(functionDefinitionURL, FunctionDefinition.class);
-      addClientFunction(backend, plotFunctionDef);
+      return getClientFunction(plotFunctionDef);
     } catch (IOException e) {
       throw new IllegalArgumentException("Could not read client function definition at: " + functionDefinitionURL, e);
     }
   }
 
-  public static void addClientFunction(ToolsBackend backend, FunctionDefinition clientFunction) {
-    backend.addFunction(RuntimeFunctionDefinition.builder()
+  public static RuntimeFunctionDefinition getClientFunction(FunctionDefinition clientFunction) {
+    return RuntimeFunctionDefinition.builder()
         .type(FunctionType.client)
         .function(clientFunction)
         .context(List.of())
-        .build());
+        .build();
   }
 
   public static RuntimeFunctionDefinition getRuntimeFunctionDefinition(Class<? extends UserDefinedFunction> clazz) {
-    FunctionDefinition funcDef = null;
+    FunctionDefinition funcDef;
     try {
       funcDef = mapper.treeToValue(getFunctionDefinition(clazz),  FunctionDefinition.class);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
+    boolean isLocal = !isClientFunction(clazz);
     return RuntimeFunctionDefinition.builder()
-        .type(FunctionType.local)
+        .type(isLocal?FunctionType.local:FunctionType.client)
         .function(funcDef)
         .api(null)
         .context(List.of())
-        .executable(getExecutableFunction(clazz))
+        .executable(isLocal?getExecutableFunction(clazz):null)
         .build();
   }
 
-  public static<T extends UserDefinedFunction> Function<JsonNode, Object> getExecutableFunction(Class<T> clazz) {
-    return jsonNode -> {
-      T parameters = null;
-      try {
-        parameters = mapper.treeToValue(jsonNode, clazz);
-      } catch (JsonProcessingException e) {
-        throw new RuntimeException("Could not parse function parameters", e);
+  private static boolean isClientFunction(Class<? extends UserDefinedFunction> clazz) {
+    try {
+      Method method = clazz.getMethod("isClientFunction");
+      if (Modifier.isStatic(method.getModifiers())) {
+        return ((boolean) method.invoke(null));
       }
-      return parameters.execute();
+    } catch (NoSuchMethodException e) {
+      //ignore
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return false;
+  }
+
+  public static<U extends UserDefinedFunction> U getFunctionCall(GenericFunctionCall functionCall, Class<U> clazz) {
+    ErrorHandling.checkArgument(functionCall.getName().equalsIgnoreCase(clazz.getSimpleName()), "Not the same functions: %s vs %s", functionCall.getName(), clazz.getSimpleName());
+    return getFunctionCall(functionCall.getArguments(), clazz);
+  }
+
+  public static<U extends UserDefinedFunction> U getFunctionCall(JsonNode arguments, Class<U> clazz) {
+    try {
+      return mapper.treeToValue(arguments, clazz);
+    } catch (JsonProcessingException e) {
+      throw new IllegalArgumentException("Could not parse function parameters", e);
+    }
+  }
+
+  public static<U extends UserDefinedFunction> Function<JsonNode, Object> getExecutableFunction(Class<U> clazz) {
+    return jsonNode -> {
+      U udfCall = getFunctionCall(jsonNode, clazz);
+      return udfCall.execute();
     };
   }
 

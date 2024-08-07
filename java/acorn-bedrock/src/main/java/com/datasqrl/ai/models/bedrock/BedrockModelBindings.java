@@ -1,5 +1,6 @@
 package com.datasqrl.ai.models.bedrock;
 
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
 import com.datasqrl.ai.tool.GenericFunctionCall;
 import com.datasqrl.ai.models.ModelAnalyzer;
@@ -31,7 +32,7 @@ public class BedrockModelBindings implements ModelBindings<BedrockChatMessage, B
   }
 
   @Override
-  public GenericChatMessage convertMessage(BedrockChatMessage msg, Map<String, Object> sessionContext) {
+  public GenericChatMessage convertMessage(BedrockChatMessage msg, Context sessionContext) {
     BedrockFunctionCall fctCall = null;
     if (msg.getRole() == BedrockChatRole.ASSISTANT) {
       fctCall = msg.getFunctionCall();
@@ -41,7 +42,7 @@ public class BedrockModelBindings implements ModelBindings<BedrockChatMessage, B
         .content(fctCall == null ? msg.getTextContent() : functionCall2String(fctCall))
         .functionCall(fctCall == null ? null :  new GenericFunctionCall(fctCall.getFunctionName(),fctCall.getArguments()))
         .name(msg.getName())
-        .context(sessionContext)
+        .context(sessionContext.asMap())
         .timestamp(Instant.now().toString())
         .numTokens(tokenCounter.countTokens(msg))
         .build();

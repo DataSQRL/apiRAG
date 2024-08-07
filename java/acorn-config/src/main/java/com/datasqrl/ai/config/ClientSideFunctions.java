@@ -11,11 +11,11 @@ public enum ClientSideFunctions {
   /**
    * For drawing one-dimensional charts on the client
    */
-  datacharts("client-functions/plotfunction1d.json"),
+  datacharts("ui/datacharts.json"),
   /**
    * For drawing two-dimensional charts on the client
    */
-  datacharts2d("client-functions/plotfunction2d.json");
+  datacharts2d("ui/datacharts2d.json");
 
   private final String resourceFile;
 

@@ -10,5 +10,5 @@
     "provider" : "openai",
     "name": "gpt-4o-mini"
   },
-  "local_functions": ["CurrentTime"]
+  "functions": ["CurrentTime"]
 }

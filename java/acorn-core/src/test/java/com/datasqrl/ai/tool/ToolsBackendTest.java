@@ -88,13 +88,13 @@ public class ToolsBackendTest {
   public void messageHistoryTest() throws Exception {
     objectMapper.setConfig(objectMapper.getSerializationConfig().with(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true));
 
-    Map<String, Object> context = Map.of("customerid", 10);
+    Context context = Context.of(Map.of("customerid", 10));
     GenericChatMessage msg1 = GenericChatMessage.builder()
         .role("user")
         .content("test")
         .name("myName")
         .functionCall(new GenericFunctionCall("myFunction", convert(Map.of("arg1", 5, "arg2", "myValue"))))
-        .context(context)
+        .context(context.asMap())
         .uuid(UUID.randomUUID().toString())
         .timestamp(Instant.now().toString())
         .numTokens(50)
@@ -104,7 +104,7 @@ public class ToolsBackendTest {
         .content("test2")
         .name("myName")
         .functionCall(new GenericFunctionCall("myFunction", convert(Map.of("arg1", 5, "arg2", "myValue"))))
-        .context(context)
+        .context(context.asMap())
         .uuid(UUID.randomUUID().toString())
         .timestamp(Instant.now().toString())
         .numTokens(230)

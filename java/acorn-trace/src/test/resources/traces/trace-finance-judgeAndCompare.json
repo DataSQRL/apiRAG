@@ -1,0 +1,247 @@
+{
+  "entries": [
+    {
+      "type": "Response",
+      "requestId": 0,
+      "content": "transactions spending credit card category"
+    },
+    {
+      "type": "Message",
+      "requestId": 1,
+      "content": "Show me my most expensive 5 creditcard transactions from last month"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 1,
+      "invocationId": 0,
+      "name": "transactions",
+      "internal": true,
+      "arguments": {
+        "fromTime": "2024-05-01T00:00:00-00:00",
+        "toTime": "2024-06-01T00:00:00-00:00"
+      }
+    },
+    {
+      "type": "FunctionResponse",
+      "requestId": 1,
+      "invocationId": 0,
+      "name": "transactions",
+      "response": "{\"data\":{\"Transactions\":[{\"time\":\"2024-05-31T21:36:36.500Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":133.56,\"merchantName\":\"Walsh Group\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-31T07:11:32.726Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":588.99,\"merchantName\":\"Howe and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-31T02:38:58.698Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":468.41,\"merchantName\":\"Grant and Sons\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-30T21:31:49.277Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":68.6,\"merchantName\":\"Beer, Conroy and Franecki\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-30T20:21:29.734Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":24.77,\"merchantName\":\"Hauck, McClure and Lebsack\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-30T07:17:36.247Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":291.08,\"merchantName\":\"Rempel Inc\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-30T00:57:53.782Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":277.35,\"merchantName\":\"Hintz, Hudson and Schroeder\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-29T23:13:00.166Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":885.43,\"merchantName\":\"Reinger, Bartoletti and Wuckert\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-29T21:23:58.632Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":16.52,\"merchantName\":\"Wolff Inc\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-29T19:20:15.634Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":201.95,\"merchantName\":\"Schaden and Sons\",\"category\":\"Communication\"},{\"time\":\"2024-05-29T13:23:55.603Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":304.83,\"merchantName\":\"Sanford and Sons\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-28T19:09:18.369Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":844.76,\"merchantName\":\"Reinger, Bartoletti and Wuckert\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-28T18:31:12.545Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":361.68,\"merchantName\":\"Hauck, McClure and Lebsack\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-28T11:28:27.372Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":344.56,\"merchantName\":\"Hirthe LLC\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-28T08:44:47.562Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":195.86,\"merchantName\":\"Doyle-Flatley\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-28T08:20:20.048Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":118.78,\"merchantName\":\"Hermiston-Streich\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-28T06:43:34.122Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":66.97,\"merchantName\":\"Rippin LLC\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-28T05:55:04.455Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":922.47,\"merchantName\":\"Turcotte-MacGyver\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-28T05:20:16.075Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":502.22,\"merchantName\":\"Keeling and Sons\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-28T04:16:17.066Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":773.7,\"merchantName\":\"Murphy Group\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-24T23:53:06.860Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":186.88,\"merchantName\":\"Hartmann, Dooley and Hagenes\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-24T20:00:28.546Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1232.41,\"merchantName\":\"Beahan-Fahey\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-24T16:22:12.290Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":172.84,\"merchantName\":\"Schaden and Sons\",\"category\":\"Communication\"},{\"time\":\"2024-05-24T14:49:55.056Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":323.84,\"merchantName\":\"Stroman, Torp and Lockman\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-24T08:42:36.559Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":96.29,\"merchantName\":\"Rippin LLC\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-24T01:20:08.994Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":51.68,\"merchantName\":\"Kozey and Sons\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-24T00:13:16.298Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2058.87,\"merchantName\":\"Beahan-Fahey\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-23T20:26:23.440Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":318.83,\"merchantName\":\"Hayes Group\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-23T19:22:19.602Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1945.54,\"merchantName\":\"Marks LLC\",\"category\":\"Childcare\"},{\"time\":\"2024-05-23T18:46:24.414Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2328.52,\"merchantName\":\"Hartmann, Dooley and Hagenes\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-23T18:15:09.619Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":352.26,\"merchantName\":\"Blanda-Braun\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-23T17:50:21.811Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1415.64,\"merchantName\":\"Corwin and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-23T17:22:12.764Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":466.95,\"merchantName\":\"Walsh Group\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-23T08:06:36.237Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":131.67,\"merchantName\":\"Howe and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-22T22:34:09.351Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":703.21,\"merchantName\":\"Cole-Wilderman\",\"category\":\"Transportation\"},{\"time\":\"2024-05-22T19:10:25.722Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":417.04,\"merchantName\":\"Batz-Boyle\",\"category\":\"Transportation\"},{\"time\":\"2024-05-22T18:30:36.326Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":776.84,\"merchantName\":\"Spencer LLC\",\"category\":\"Groceries\"},{\"time\":\"2024-05-22T17:54:56.122Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":24.1,\"merchantName\":\"Mann Group\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-22T12:16:44.283Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":127.88,\"merchantName\":\"Rolfson Group\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-22T10:15:07.316Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":352.92,\"merchantName\":\"Wuckert-Ondricka\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-22T07:23:31.204Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":23.55,\"merchantName\":\"Conroy-Orn\",\"category\":\"Communication\"},{\"time\":\"2024-05-21T14:45:26.692Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":723.35,\"merchantName\":\"Fisher, Gusikowski and Denesik\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-21T14:34:36.172Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":374.77,\"merchantName\":\"Rolfson Group\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-21T14:19:16.374Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":126.26,\"merchantName\":\"Anderson, Thiel and Morar\",\"category\":\"Communication\"},{\"time\":\"2024-05-21T14:17:08.066Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":381.94,\"merchantName\":\"Spencer LLC\",\"category\":\"Groceries\"},{\"time\":\"2024-05-21T13:57:54.092Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":495.84,\"merchantName\":\"Towne-Weber\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-21T13:33:57.886Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":831.24,\"merchantName\":\"Towne, Renner and Murphy\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-21T12:08:42.476Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":41.8,\"merchantName\":\"Boyle, Bins and Collier\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-21T08:28:36.679Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2218.76,\"merchantName\":\"Wehner, Ledner and Altenwerth\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-21T08:10:33.569Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":154.9,\"merchantName\":\"Wehner-Nikolaus\",\"category\":\"Communication\"},{\"time\":\"2024-05-21T06:19:04.187Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":30.53,\"merchantName\":\"Blanda-Braun\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-21T00:41:57.443Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":280.17,\"merchantName\":\"Murphy Group\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-21T00:22:12.813Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":257.84,\"merchantName\":\"Ledner, Brown and Torp\",\"category\":\"Groceries\"},{\"time\":\"2024-05-20T20:50:34.792Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2601.59,\"merchantName\":\"Schaden-Goldner\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-20T18:08:22.003Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":388.14,\"merchantName\":\"Franecki, Kihn and Von\",\"category\":\"Transportation\"},{\"time\":\"2024-05-20T02:57:26.522Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":620,\"merchantName\":\"Balistreri-Schiller\",\"category\":\"Groceries\"},{\"time\":\"2024-05-20T02:22:51.488Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":785.23,\"merchantName\":\"Blanda-Weissnat\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-19T10:44:15.232Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":674.37,\"merchantName\":\"Gibson and Sons\",\"category\":\"Transportation\"},{\"time\":\"2024-05-19T04:41:34.960Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":134.69,\"merchantName\":\"Anderson, Thiel and Morar\",\"category\":\"Communication\"},{\"time\":\"2024-05-18T21:42:26.614Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":228.29,\"merchantName\":\"Blick-Dicki\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-18T21:37:02.173Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":350.8,\"merchantName\":\"Kutch and Sons\",\"category\":\"Groceries\"},{\"time\":\"2024-05-18T13:21:42.260Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1308.97,\"merchantName\":\"Beahan Group\",\"category\":\"Childcare\"},{\"time\":\"2024-05-18T10:20:15.741Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":206.9,\"merchantName\":\"Grant LLC\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-18T09:31:35.335Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":55.6,\"merchantName\":\"Blanda-Weissnat\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-18T07:19:58.338Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":509.39,\"merchantName\":\"Kutch and Sons\",\"category\":\"Groceries\"},{\"time\":\"2024-05-18T07:05:13.317Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1560.65,\"merchantName\":\"Marks LLC\",\"category\":\"Childcare\"},{\"time\":\"2024-05-18T06:13:13.683Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":461.81,\"merchantName\":\"Hermiston-Streich\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-18T03:28:50.801Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":861.36,\"merchantName\":\"Sauer LLC\",\"category\":\"Education\"},{\"time\":\"2024-05-15T23:56:12.207Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":858.39,\"merchantName\":\"Corwin, Erdman and Koelpin\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-15T23:40:12.944Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":545.84,\"merchantName\":\"Spencer LLC\",\"category\":\"Groceries\"},{\"time\":\"2024-05-15T21:23:26.533Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2721.59,\"merchantName\":\"Hartmann, Dooley and Hagenes\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-15T18:14:05.316Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":162.85,\"merchantName\":\"Quigley, Block and Davis\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-15T18:04:11.306Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":59.26,\"merchantName\":\"Cole-Wilderman\",\"category\":\"Transportation\"},{\"time\":\"2024-05-15T17:41:47.615Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":270.61,\"merchantName\":\"Sanford and Sons\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-15T17:32:58.261Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1045.19,\"merchantName\":\"Blanda-Weissnat\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-15T11:50:48.254Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":40.9,\"merchantName\":\"Hintz, Hudson and Schroeder\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-15T09:51:20.939Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1655.99,\"merchantName\":\"Marks LLC\",\"category\":\"Childcare\"},{\"time\":\"2024-05-15T08:31:17.363Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2730.05,\"merchantName\":\"Renner Group\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-15T07:12:34.309Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":118.64,\"merchantName\":\"Towne, Renner and Murphy\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-15T06:40:11.676Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":303.48,\"merchantName\":\"Block, Huels and Windler\",\"category\":\"Groceries\"},{\"time\":\"2024-05-15T06:15:14.812Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1088.91,\"merchantName\":\"Barrows, Gorczany and Ortiz\",\"category\":\"Childcare\"},{\"time\":\"2024-05-15T04:02:21.048Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2043.1,\"merchantName\":\"Corwin and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-15T02:48:24.884Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1531.06,\"merchantName\":\"Marks LLC\",\"category\":\"Childcare\"},{\"time\":\"2024-05-15T02:29:51.416Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":189.13,\"merchantName\":\"Zemlak, Jacobi and Goodwin\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-15T02:21:05.230Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":584.15,\"merchantName\":\"Abshire-Bruen\",\"category\":\"Transportation\"},{\"time\":\"2024-05-15T01:22:42.072Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":729.14,\"merchantName\":\"Howe and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-14T22:35:04.224Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":402.56,\"merchantName\":\"Beahan-Fahey\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-14T21:30:55.199Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":763.25,\"merchantName\":\"Kuhlman, Luettgen and Hahn\",\"category\":\"Education\"},{\"time\":\"2024-05-14T14:41:15.853Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":919.29,\"merchantName\":\"Zemlak, Jacobi and Goodwin\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-14T10:48:59.325Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":68.23,\"merchantName\":\"Dicki Group\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-14T09:34:24.679Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":486.34,\"merchantName\":\"Towne-Weber\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-14T02:04:46.213Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":333.77,\"merchantName\":\"Robel LLC\",\"category\":\"Transportation\"},{\"time\":\"2024-05-14T00:05:17.215Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":305.49,\"merchantName\":\"Grant LLC\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-13T22:23:55.361Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":22.36,\"merchantName\":\"McKenzie, Harris and Casper\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-13T21:53:38.216Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":104.92,\"merchantName\":\"Rippin LLC\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-13T20:10:35.525Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":723.27,\"merchantName\":\"Considine Inc\",\"category\":\"Groceries\"},{\"time\":\"2024-05-13T07:42:47.356Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":426.31,\"merchantName\":\"Batz-Boyle\",\"category\":\"Transportation\"},{\"time\":\"2024-05-13T05:39:16.406Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":786.97,\"merchantName\":\"Corwin, Erdman and Koelpin\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-12T04:14:19.467Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":154.79,\"merchantName\":\"Wehner-Nikolaus\",\"category\":\"Communication\"},{\"time\":\"2024-05-11T18:17:49.995Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":555.43,\"merchantName\":\"Jenkins-Schuppe\",\"category\":\"Education\"},{\"time\":\"2024-05-11T13:50:55.580Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":349.92,\"merchantName\":\"Murazik Inc\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-11T12:18:15.292Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":169.08,\"merchantName\":\"Hintz, Hudson and Schroeder\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-11T11:30:17.955Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":64.73,\"merchantName\":\"Murazik Inc\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-11T11:13:01.227Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":700.65,\"merchantName\":\"Towne, Renner and Murphy\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-11T10:39:34.879Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":975.92,\"merchantName\":\"Sporer, Hudson and Watsica\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-11T09:37:19.296Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":99.49,\"merchantName\":\"Conroy-Orn\",\"category\":\"Communication\"},{\"time\":\"2024-05-11T09:01:15.083Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":348.89,\"merchantName\":\"Towne, Renner and Murphy\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-11T08:49:24.744Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":595.34,\"merchantName\":\"Ebert, Okuneva and McKenzie\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-11T07:30:45.316Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":2344.55,\"merchantName\":\"Mann-Bahringer\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-11T07:15:30.095Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":806.94,\"merchantName\":\"Kuhlman, Luettgen and Hahn\",\"category\":\"Education\"},{\"time\":\"2024-05-11T05:37:02.289Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":578.5,\"merchantName\":\"Rempel Inc\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-11T03:26:40.762Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":81.71,\"merchantName\":\"Hirthe LLC\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-11T01:28:06.127Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":415.48,\"merchantName\":\"Schimmel Group\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-08T21:18:07.356Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":883.22,\"merchantName\":\"Murphy Group\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-08T19:23:08.101Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":1304.59,\"merchantName\":\"Beahan Group\",\"category\":\"Childcare\"},{\"time\":\"2024-05-07T23:20:17.149Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":445.65,\"merchantName\":\"Walsh Group\",\"category\":\"Health & Wellness\"},{\"time\":\"2024-05-07T22:52:39.658Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":137.08,\"merchantName\":\"Gerlach, Schultz and Botsford\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-07T20:21:23.618Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":191.4,\"merchantName\":\"Gibson and Sons\",\"category\":\"Transportation\"},{\"time\":\"2024-05-07T19:11:54.288Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":306.14,\"merchantName\":\"Howe and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-07T17:44:06.130Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":412.6,\"merchantName\":\"Ledner, Brown and Torp\",\"category\":\"Groceries\"},{\"time\":\"2024-05-07T17:27:03.231Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":385.26,\"merchantName\":\"Wolff Inc\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-07T15:27:03.795Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":128.25,\"merchantName\":\"Ebert-Dickinson\",\"category\":\"Communication\"},{\"time\":\"2024-05-07T09:25:15.706Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":721,\"merchantName\":\"Towne-Weber\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-07T06:59:11.841Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":120.67,\"merchantName\":\"Anderson, Thiel and Morar\",\"category\":\"Communication\"},{\"time\":\"2024-05-07T05:28:59.512Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":73.48,\"merchantName\":\"Beier Group\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-07T03:34:58.882Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":47.77,\"merchantName\":\"Conroy-Orn\",\"category\":\"Communication\"},{\"time\":\"2024-05-07T01:48:10.385Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":107.55,\"merchantName\":\"Beier Group\",\"category\":\"Clothing & Apparel\"},{\"time\":\"2024-05-07T01:23:24.981Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":65.63,\"merchantName\":\"Wehner-Nikolaus\",\"category\":\"Communication\"},{\"time\":\"2024-05-04T19:40:38.867Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":59.81,\"merchantName\":\"Mills-Goldner\",\"category\":\"Entertainment\"},{\"time\":\"2024-05-04T18:27:04.698Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":351.68,\"merchantName\":\"Murphy Group\",\"category\":\"Miscellaneous\"},{\"time\":\"2024-05-04T11:30:37.718Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":916.09,\"merchantName\":\"Thiel Inc\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-04T09:05:31.711Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":960.51,\"merchantName\":\"Lockman-Langosh\",\"category\":\"Travel & Vacations\"},{\"time\":\"2024-05-04T06:47:23.860Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":224.37,\"merchantName\":\"Doyle-Flatley\",\"category\":\"Restaurants & Dining\"},{\"time\":\"2024-05-04T02:40:20.126Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":900.29,\"merchantName\":\"Corwin and Sons\",\"category\":\"Housing & Utilities\"},{\"time\":\"2024-05-01T10:07:39.103Z\",\"cardNo\":\"3.7926126082013E14\",\"amount\":72.12,\"merchantName\":\"Rippin LLC\",\"category\":\"Entertainment\"}]}}"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 1,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          2601.59,
+          2730.05,
+          2328.52,
+          2344.55,
+          2218.76
+        ],
+        "chartType": "bar",
+        "caption": "The chart below displays your top 5 most expensive transactions from May 2024.",
+        "title": "Top 5 Most Expensive Transactions - May 2024",
+        "labels": [
+          "Schaden-Goldner (Housing & Utilities) - $2601.59",
+          "Renner Group (Housing & Utilities) - $2730.05",
+          "Hartmann, Dooley and Hagenes (Housing & Utilities) - $2328.52",
+          "Mann-Bahringer (Housing & Utilities) - $2344.55",
+          "Wehner, Ledner and Altenwerth (Housing & Utilities) - $2218.76"
+        ]
+      },
+      "judge": "Values are allowed to be in any order but should be set-equivalent."
+    },
+    {
+      "type": "Message",
+      "requestId": 2,
+      "content": "Show me a breakdown of my spending by category"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 2,
+      "invocationId": 0,
+      "name": "spending_by_category",
+      "internal": true,
+      "arguments": {
+        "limit": 12
+      }
+    },
+    {
+      "type": "FunctionResponse",
+      "requestId": 2,
+      "invocationId": 0,
+      "name": "spending_by_category",
+      "response": "{\"data\":{\"SpendingByCategory\":[{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Childcare\",\"spending\":1945.54},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Clothing & Apparel\",\"spending\":352.26},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Communication\",\"spending\":374.79},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Entertainment\",\"spending\":214.94},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Health & Wellness\",\"spending\":930.29},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Housing & Utilities\",\"spending\":7353.99},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Miscellaneous\",\"spending\":1275.92},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Restaurants & Dining\",\"spending\":1521.56},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Travel & Vacations\",\"spending\":2652.66},{\"timeWeek\":\"2024-05-22T23:59:59.999Z\",\"category\":\"Childcare\",\"spending\":2869.62},{\"timeWeek\":\"2024-05-22T23:59:59.999Z\",\"category\":\"Clothing & Apparel\",\"spending\":614.45},{\"timeWeek\":\"2024-05-22T23:59:59.999Z\",\"category\":\"Communication\",\"spending\":439.4}]}}"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 2,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          1945.54,
+          352.26,
+          374.79,
+          214.94,
+          930.29,
+          7353.99,
+          1275.92,
+          1521.56,
+          2652.66,
+          2869.62,
+          614.45,
+          439.4
+        ],
+        "chartType": "bar",
+        "title": "Spending by Category",
+        "labels": [
+          "Childcare (May 29)",
+          "Clothing & Apparel (May 29)",
+          "Communication (May 29)",
+          "Entertainment (May 29)",
+          "Health & Wellness (May 29)",
+          "Housing & Utilities (May 29)",
+          "Miscellaneous (May 29)",
+          "Restaurants & Dining (May 29)",
+          "Travel & Vacations (May 29)",
+          "Childcare (May 22)",
+          "Clothing & Apparel (May 22)",
+          "Communication (May 22)"
+        ],
+        "caption": "Breakdown of spending by category for the weeks ending May 29 and May 22, 2024."
+      },
+      "judge": ""
+    },
+    {
+      "type": "Message",
+      "requestId": 3,
+      "content": "Show me a breakdown of my spending by category as a pie chart"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 3,
+      "invocationId": 0,
+      "name": "spending_by_category",
+      "internal": true,
+      "arguments": {
+        "limit": 12
+      }
+    },
+    {
+      "type": "FunctionResponse",
+      "requestId": 3,
+      "invocationId": 0,
+      "name": "spending_by_category",
+      "response": "{\"data\":{\"SpendingByCategory\":[{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Childcare\",\"spending\":1945.54},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Clothing & Apparel\",\"spending\":352.26},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Communication\",\"spending\":374.79},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Entertainment\",\"spending\":214.94},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Health & Wellness\",\"spending\":930.29},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Housing & Utilities\",\"spending\":7353.99},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Miscellaneous\",\"spending\":1275.92},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Restaurants & Dining\",\"spending\":1521.56},{\"timeWeek\":\"2024-05-29T23:59:59.999Z\",\"category\":\"Travel & Vacations\",\"spending\":2652.66},{\"timeWeek\":\"2024-05-22T23:59:59.999Z\",\"category\":\"Childcare\",\"spending\":2869.62},{\"timeWeek\":\"2024-05-22T23:59:59.999Z\",\"category\":\"Clothing & Apparel\",\"spending\":614.45},{\"timeWeek\":\"2024-05-22T23:59:59.999Z\",\"category\":\"Communication\",\"spending\":439.4}]}}"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 3,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          1945.54,
+          352.26,
+          374.79,
+          214.94,
+          930.29,
+          7353.99,
+          1275.92,
+          1521.56,
+          2652.66,
+          2869.62,
+          614.45,
+          439.4
+        ],
+        "chartType": "pie",
+        "caption": "Breakdown of spending by category for the most recent week",
+        "title": "Spending by Category",
+        "labels": [
+          "Childcare",
+          "Clothing & Apparel",
+          "Communication",
+          "Entertainment",
+          "Health & Wellness",
+          "Housing & Utilities",
+          "Miscellaneous",
+          "Restaurants & Dining",
+          "Travel & Vacations",
+          "Childcare (Previous Week)",
+          "Clothing & Apparel (Previous Week)",
+          "Communication (Previous Week)"
+        ]
+      },
+      "judge": ""
+    },
+    {
+      "type": "Message",
+      "requestId": 4,
+      "content": "show me a chart of how my spending per day developed in the last 2 weeks"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 4,
+      "invocationId": 0,
+      "name": "spending_by_day",
+      "internal": true,
+      "arguments": {
+        "fromTime": "2024-05-21T00:00:00-00:00",
+        "toTime": "2024-06-04T00:00:00-00:00"
+      }
+    },
+    {
+      "type": "FunctionResponse",
+      "requestId": 4,
+      "invocationId": 0,
+      "name": "spending_by_day",
+      "response": "{\"data\":{\"SpendingByDay\":[{\"timeDay\":\"2024-06-03T23:59:59.999Z\",\"spending\":668.92},{\"timeDay\":\"2024-06-02T23:59:59.999Z\",\"spending\":3908.72},{\"timeDay\":\"2024-06-01T23:59:59.999Z\",\"spending\":1323.71},{\"timeDay\":\"2024-05-31T23:59:59.999Z\",\"spending\":1190.96},{\"timeDay\":\"2024-05-30T23:59:59.999Z\",\"spending\":661.8},{\"timeDay\":\"2024-05-29T23:59:59.999Z\",\"spending\":1408.73},{\"timeDay\":\"2024-05-28T23:59:59.999Z\",\"spending\":4131},{\"timeDay\":\"2024-05-24T23:59:59.999Z\",\"spending\":4122.81},{\"timeDay\":\"2024-05-23T23:59:59.999Z\",\"spending\":6959.41},{\"timeDay\":\"2024-05-22T23:59:59.999Z\",\"spending\":2425.54},{\"timeDay\":\"2024-05-21T23:59:59.999Z\",\"spending\":5917.4}]}}"
+    },
+    {
+      "type": "FunctionCall",
+      "requestId": 4,
+      "invocationId": 1,
+      "name": "data_visualization",
+      "internal": false,
+      "arguments": {
+        "values": [
+          668.92,
+          3908.72,
+          1323.71,
+          1190.96,
+          661.8,
+          1408.73,
+          4131,
+          4122.81,
+          6959.41,
+          2425.54,
+          5917.4
+        ],
+        "labels": [
+          "2024-06-03",
+          "2024-06-02",
+          "2024-06-01",
+          "2024-05-31",
+          "2024-05-30",
+          "2024-05-29",
+          "2024-05-28",
+          "2024-05-24",
+          "2024-05-23",
+          "2024-05-22",
+          "2024-05-21"
+        ],
+        "chartType": "line",
+        "title": "Daily Spending Over the Last 2 Weeks",
+        "caption": "This chart shows how your spending has developed on a daily basis from May 21, 2024, to June 3, 2024."
+      },
+      "judge": ""
+    }
+  ]
+}

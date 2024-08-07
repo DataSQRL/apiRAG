@@ -1,5 +1,6 @@
 package com.datasqrl.ai;
 
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
 import com.datasqrl.ai.tool.GenericFunctionCall;
 import com.fasterxml.jackson.databind.JsonNode;

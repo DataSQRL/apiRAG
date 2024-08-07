@@ -3,28 +3,30 @@ package com.datasqrl.ai.config;
 import com.datasqrl.ai.api.APIExecutor;
 import com.datasqrl.ai.api.APIExecutorFactory;
 import com.datasqrl.ai.api.GraphQLSchemaConverter;
-import com.datasqrl.ai.tool.ToolsBackend;
-import com.datasqrl.ai.tool.ToolsBackendFactory;
-import com.datasqrl.ai.tool.RuntimeFunctionDefinition;
 import com.datasqrl.ai.function.UDFConverter;
 import com.datasqrl.ai.function.UserDefinedFunction;
 import com.datasqrl.ai.function.builtin.BuiltinFunctions;
 import com.datasqrl.ai.models.ChatProvider;
 import com.datasqrl.ai.models.ChatProviderFactory;
+import com.datasqrl.ai.tool.ModelObservability;
+import com.datasqrl.ai.tool.RuntimeFunctionDefinition;
+import com.datasqrl.ai.tool.ToolManager;
+import com.datasqrl.ai.tool.ToolsBackend;
+import com.datasqrl.ai.tool.ToolsBackendFactory;
 import com.datasqrl.ai.util.ConfigurationUtil;
 import com.datasqrl.ai.util.ErrorHandling;
 import com.datasqrl.ai.util.JsonUtil;
+import lombok.Value;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.JSONConfiguration;
+
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.Value;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.JSONConfiguration;
 
 @Value
 public class AcornAgentConfiguration {
@@ -33,19 +35,29 @@ public class AcornAgentConfiguration {
   public static final String API_PREFIX = "apis";
   public static final String CONVERTER_PREFIX = "converter";
 
-  public static final String CLIENT_FUNCTIONS_KEY = "client_functions";
   public static final String PROMPT_KEY = "prompt";
-  public static final String LOCAL_FUNCTIONS_KEY = "local_functions";
+  public static final String FUNCTIONS_KEY = "functions";
   public static final String CONTEXT_KEY = "context";
 
   Configuration baseConfiguration;
   Configuration modelConfiguration;
   List<RuntimeFunctionDefinition> toolFunctions;
+  ModelObservability observability;
 
-  private RuntimeFunctionDefinition loadLocalFunction(String functionClassName) {
-    if (!functionClassName.contains(".")) {
+
+  private RuntimeFunctionDefinition loadFunction(String functionName) {
+    String functionClassName = functionName;
+    if (functionName.toLowerCase().endsWith(".json")) {
+      //It's a URL that points to a json file with the client function definition
+      try {
+        URL url = ConfigurationUtil.getResourceFile(functionName);
+        return UDFConverter.getClientFunction(url);
+      } catch (IllegalArgumentException e) {
+        throw new IllegalArgumentException("Could not read function definition from resource: " + functionName, e);
+      }
+    } else if (!functionName.contains(".")) {
       //Assume it's a builtin function
-      functionClassName = BuiltinFunctions.PACKAGE_NAME + "." + functionClassName;
+      functionClassName = BuiltinFunctions.PACKAGE_NAME + "." + functionName;
     }
     Class<?> functionClass = null;
     try {
@@ -57,23 +69,15 @@ public class AcornAgentConfiguration {
     return UDFConverter.getRuntimeFunctionDefinition((Class<? extends UserDefinedFunction>)functionClass);
   }
 
-  public ToolsBackend getFunctionBackend() {
+  public ToolManager getToolManager() {
     Map<String,APIExecutor> apiExecutors = APIExecutorFactory.getAPIExecutors(baseConfiguration.subset(
         API_PREFIX));
     ErrorHandling.checkArgument(!apiExecutors.isEmpty(), "Need to configure at least one API in the configuration file under field `%s`",
         API_PREFIX);
     ToolsBackend backend = ToolsBackendFactory.of(toolFunctions, apiExecutors, Set.copyOf(getContext()));
-    //Add client functions
-    baseConfiguration.getList(CLIENT_FUNCTIONS_KEY).stream().map(String.class::cast)
-        .forEach(fctName -> {
-          ClientSideFunctions clientFct = ClientSideFunctions.forName(fctName).orElseThrow(() ->
-              new IllegalArgumentException(String.format("Not a valid client function: %s. Should be one of: %s", fctName, Arrays.toString(ClientSideFunctions.values()))));
-          URL url = ConfigurationUtil.getResourceFile(clientFct.getResourceFile());
-          UDFConverter.addClientFunction(backend, url);
-        });
-    //Add local functions
-    baseConfiguration.getList(LOCAL_FUNCTIONS_KEY).stream().map(String.class::cast)
-        .map(this::loadLocalFunction).forEach(backend::addFunction);
+    //Add functions
+    baseConfiguration.getList(FUNCTIONS_KEY).stream().map(String.class::cast)
+        .map(this::loadFunction).forEach(backend::addFunction);
     return backend;
   }
 
@@ -85,9 +89,12 @@ public class AcornAgentConfiguration {
   }
 
   public ChatProvider getChatProvider() {
-    ToolsBackend backend = getFunctionBackend();
-    String systemPrompt = getSystemPrompt();
-    return ChatProviderFactory.fromConfiguration(modelConfiguration).create(getModelConfiguration(), backend, systemPrompt);
+    return getChatProvider(getToolManager());
+  }
+
+  public ChatProvider getChatProvider(ToolManager toolManager) {
+    return ChatProviderFactory.fromConfiguration(modelConfiguration)
+        .create(modelConfiguration, toolManager, getSystemPrompt(), observability);
   }
 
   public List<String> getContext() {
@@ -114,7 +121,7 @@ public class AcornAgentConfiguration {
     } else {
       tools = ToolsBackendFactory.readTools(toolsContent);
     }
-    return new AcornAgentConfiguration(baseConfig, baseConfig.subset("model"), tools);
+    return new AcornAgentConfiguration(baseConfig, baseConfig.subset("model"), tools, ModelObservability.NOOP);
   }
 
 }

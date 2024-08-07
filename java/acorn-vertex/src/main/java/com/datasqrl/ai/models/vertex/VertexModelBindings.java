@@ -2,6 +2,7 @@ package com.datasqrl.ai.models.vertex;
 
 import com.datasqrl.ai.models.ModelAnalyzer;
 import com.datasqrl.ai.models.ModelBindings;
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
 import com.datasqrl.ai.tool.GenericFunctionCall;
 import com.datasqrl.ai.util.JsonUtil;
@@ -64,10 +65,10 @@ public class VertexModelBindings implements ModelBindings<Content, FunctionCall>
 
   //  TODO: Double check
   @Override
-  public GenericChatMessage convertMessage(Content content, Map<String, Object> sessionContext) {
+  public GenericChatMessage convertMessage(Content content, Context sessionContext) {
     GenericChatMessage.GenericChatMessageBuilder builder = GenericChatMessage.builder()
         .role(content.getRole())
-        .context(sessionContext)
+        .context(sessionContext.asMap())
         .timestamp(Instant.now().toString())
         .numTokens(tokenCounter.countTokens(content));
     switch (content.getRole()) {

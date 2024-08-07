@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.datasqrl.ai.tool.Context;
 import com.datasqrl.ai.tool.GenericChatMessage;
 import com.datasqrl.ai.tool.ToolsBackend;
 import com.datasqrl.ai.tool.ToolsBackendFactory;
@@ -13,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +50,7 @@ public class GraphQLSchemaConverterTest {
         }), Set.of("customerid"));
     //Save and get messages aren't counted as functions
     assertEquals(5, backend.getFunctions().size());
-    assertTrue(backend.getChatMessages(Map.of("customerid", 5), 5, GenericChatMessage.class).isEmpty());
+    assertTrue(backend.getChatMessages(Context.of(Map.of("customerid", 5)), 5, GenericChatMessage.class).isEmpty());
   }
 
 
